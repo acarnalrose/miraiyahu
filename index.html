@@ -356,6 +356,25 @@
             box-shadow: 0 0 10px rgba(209, 204, 184, 0.8);
         }
 
+        .profile-wrapper {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            object-fit: cover;
+            border: 2px outset #6b5c4d;
+            border-bottom: 2px solid #0f0d0a;
+            border-right: 2px solid #0f0d0a;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            filter: sepia(30%) contrast(110%) brightness(90%);
+            flex-shrink: 0;
+        }
+
         .profile-desc {
             line-height: 1.8;
             font-size: 1.1rem;
@@ -442,63 +461,65 @@
             <h2>現實世界
                 <button class="close-btn" id="close-modal">X</button>
             </h2>
-            <div class="profile-desc">
-                <p>你好，歡迎來到這裡。這裡是無妄之境的入口。</p>
-                <p>我是 acarnalrose / Meryahu Bat Chayim / 魏淶。</p>
-                <p>主觀世界裏一切暫停。</p>
+            <div class="profile-wrapper">
+                <img src="avatar.jpg" alt="頭像" class="profile-avatar">
+                <div class="profile-desc">
+                    <p>你好，歡迎來到這裡。這裡是無妄之境的入口。</p>
+                    <p>我是 acarnalrose / Meryahu Bat Chayim / 魏淶。</p>
+                    <p>主觀世界裏一切暫停。</p>
 
-                <div class="profile-details">
-                    <div class="detail-row">
-                        <span class="detail-label">EMAIL:</span>
-                        <span class="detail-value">acarnalrose@gmail.com</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">X:</span>
-                        <span class="detail-value"><a href="https://x.com/acarnalrose" target="_blank"
-                                style="color: inherit; text-decoration: none;">@acarnalrose</a></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">TG:</span>
-                        <span class="detail-value"><a href="https://t.me/acarnalrose" target="_blank"
-                                style="color: inherit; text-decoration: none;">@acarnalrose</a></span>
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label">EMAIL:</span>
+                            <span class="detail-value">acarnalrose@gmail.com</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">X:</span>
+                            <span class="detail-value"><a href="https://x.com/acarnalrose" target="_blank"
+                                    style="color: inherit; text-decoration: none;">@acarnalrose</a></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">TG:</span>
+                            <span class="detail-value"><a href="https://t.me/acarnalrose" target="_blank"
+                                    style="color: inherit; text-decoration: none;">@acarnalrose</a></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        // 模態框互動邏輯
-        const btnRealWorld = document.getElementById('btn-realworld');
-        const modalOverlay = document.getElementById('about-modal');
-        const btnCloseModal = document.getElementById('close-modal');
+        <script>
+            // 模態框互動邏輯
+            const btnRealWorld = document.getElementById('btn-realworld');
+            const modalOverlay = document.getElementById('about-modal');
+            const btnCloseModal = document.getElementById('close-modal');
 
-        // 打開模態框
-        btnRealWorld.addEventListener('click', (e) => {
-            e.preventDefault(); // 防止 a 標籤跳轉
-            modalOverlay.classList.add('active');
-        });
+            // 打開模態框
+            btnRealWorld.addEventListener('click', (e) => {
+                e.preventDefault(); // 防止 a 標籤跳轉
+                modalOverlay.classList.add('active');
+            });
 
-        // 點擊 X 或背景層關閉模態框
-        btnCloseModal.addEventListener('click', () => {
-            modalOverlay.classList.remove('active');
-        });
-
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
+            // 點擊 X 或背景層關閉模態框
+            btnCloseModal.addEventListener('click', () => {
                 modalOverlay.classList.remove('active');
-            }
-        });
+            });
 
-        // 獲取鼠標位置並更新 CSS 變量 (既有邏輯)
-        document.addEventListener('mousemove', (e) => {
-            const body = document.body;
-            const x = (e.clientX / body.clientWidth * 100) + '%';
-            const y = (e.clientY / body.clientHeight * 100) + '%';
-            document.documentElement.style.setProperty('--x', x);
-            document.documentElement.style.setProperty('--y', y);
-        });
-    </script>
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.classList.remove('active');
+                }
+            });
+
+            // 獲取鼠標位置並更新 CSS 變量 (既有邏輯)
+            document.addEventListener('mousemove', (e) => {
+                const body = document.body;
+                const x = (e.clientX / body.clientWidth * 100) + '%';
+                const y = (e.clientY / body.clientHeight * 100) + '%';
+                document.documentElement.style.setProperty('--x', x);
+                document.documentElement.style.setProperty('--y', y);
+            });
+        </script>
 </body>
 
 </html>
