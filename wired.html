@@ -104,7 +104,7 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            animation: fadeOutSequence 6s forwards;
+            animation: fadeOutSequence 1.5s forwards;
         }
 
         #welcome-sequence h1 {
@@ -127,7 +127,7 @@
         @keyframes fadeOutSequence {
 
             0%,
-            70% {
+            50% {
                 opacity: 1;
                 visibility: visible;
             }
@@ -153,8 +153,8 @@
             transform: translateY(-50%) !important;
             /* Overridden by animation later but starting point is good */
             opacity: 0;
-            animation: fadeInPortfolio 3s ease forwards;
-            animation-delay: 5s;
+            animation: fadeInPortfolio 1s ease forwards;
+            animation-delay: 1.5s;
             /* Wait for welcome to fade */
         }
 
@@ -247,7 +247,7 @@
             letter-spacing: 0.2rem;
             text-decoration: none;
             text-shadow: 0 0 5px rgba(209, 204, 184, 0.8);
-            transition: all 0.1s ease;
+            transition: all 0.05s ease;
             cursor: pointer;
             box-shadow: inset 1px 1px 5px rgba(122, 140, 115, 0.5), 2px 2px 10px rgba(0, 0, 0, 0.8);
             border-radius: 2px;

@@ -96,18 +96,12 @@
         @keyframes bootUp {
             0% {
                 opacity: 0;
-                transform: scaleY(0.01);
-                filter: brightness(3);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scaleY(1);
-                filter: brightness(1.5);
+                transform: translateY(10px);
             }
 
             100% {
-                filter: brightness(1);
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
@@ -257,7 +251,7 @@
             font-weight: bold;
             letter-spacing: 0.1rem;
             text-decoration: none;
-            transition: all 0.1s ease;
+            transition: all 0.05s ease;
             cursor: pointer;
         }
 
@@ -267,7 +261,7 @@
             border-right: 2px solid #7a8c73;
             transform: translate(1px, 1px);
         }
-    
+
         .close-btn {
             position: absolute;
             top: 1.5rem;
@@ -288,7 +282,7 @@
             color: #fff;
             box-shadow: 0 0 10px rgba(100, 255, 100, 0.2);
         }
-</style>
+    </style>
 </head>
 
 <body>
