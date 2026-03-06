@@ -285,10 +285,19 @@
                 INDEX / 小說
             </div>
             <div class="directory-list">
-                <a href="#" class="directory-item active">血色堂屋</a>
-                <!-- 未來可以新增更多 
-                <a href="#" class="directory-item">第二篇小說</a>
-                -->
+                <a href="#chapter-1" class="directory-item active" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第一章 〈血色堂屋〉——二丫視角">第一章 〈血色堂屋〉</a>
+                <a href="#chapter-2" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第二章 〈母親的殘影〉——慧心視角">第二章 〈母親的殘影〉</a>
+                <a href="#chapter-3" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第三章 〈血色再現〉——二丫視角">第三章 〈血色再現〉</a>
+                <a href="#chapter-4" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第四章 〈城市的囚籠〉——慧心視角">第四章 〈城市的囚籠〉</a>
+                <a href="#chapter-5" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第五章 〈隱匿荒誕〉——二丫視角">第五章 〈隱匿荒誕〉</a>
+                <a href="#chapter-6" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第六章 〈紅包遺夢〉——慧心視角">第六章 〈紅包遺夢〉</a>
+                <a href="#chapter-7" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第七章 〈鏡中的自己〉——慧心視角">第七章 〈鏡中的自己〉</a>
+                <a href="#chapter-8" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第八章 〈絕望之音〉——二丫視角">第八章 〈絕望之音〉</a>
+                <a href="#chapter-9" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第九章 〈離開的人〉——慧心視角">第九章 〈離開的人〉</a>
+                <a href="#chapter-10" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第十章 〈空房間〉——二丫視角">第十章 〈空房間〉</a>
+                <a href="#chapter-11" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第十一章〈焚書的人〉——慧心視角">第十一章〈焚書的人〉</a>
+                <a href="#chapter-12" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第十二章〈最後的光〉——二丫視角">第十二章〈最後的光〉</a>
+                <a href="#chapter-13" class="directory-item" style="font-size: 0.95rem; padding: 0.8rem 1.5rem;" title="第十三章〈埋名〉——慧心視角">第十三章〈埋名〉</a>
             </div>
             <div class="back-btn-container">
                 <a href="wired.html" class="btn">
@@ -604,6 +613,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.directory-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetEl = document.getElementById(targetId);
+                const contentArea = document.querySelector('.content-area');
+                if(targetEl && contentArea) {
+                    document.querySelectorAll('.directory-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    contentArea.scrollTo({
+                        top: targetEl.offsetTop - contentArea.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
+
 
 </html>
