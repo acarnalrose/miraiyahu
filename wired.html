@@ -93,42 +93,79 @@
             box-sizing: border-box;
         }
 
-        .content {
+        /* 歡迎畫面序列 */
+        #welcome-sequence {
+            position: absolute;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            animation: fadeOutSequence 6s forwards;
+        }
+
+        #welcome-sequence h1 {
+            font-size: 2.5rem;
+            font-weight: 200;
+            letter-spacing: 0.5rem;
+            margin-bottom: 2rem;
+            font-family: serif;
+            text-shadow: 0 0 15px rgba(209, 204, 184, 0.8);
+            color: #d1ccb8;
+        }
+
+        #welcome-sequence p {
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+            color: #d1ccb8;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeOutSequence {
+
+            0%,
+            70% {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* 最終停留的作品分類畫面 */
+        .portfolio-screen {
             z-index: 10;
-            text-align: center;
-            background: rgba(10, 8, 5, 0.85);
-            padding: 3rem;
-            border: 2px outset #6b5c4d;
-            border-bottom: 2px solid #0f0d0a;
-            border-right: 2px solid #0f0d0a;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(8px);
-            width: 80%;
-            max-width: 800px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            width: 80%;
+            max-width: 900px;
+            opacity: 0;
+            animation: fadeInPortfolio 3s ease forwards;
+            animation-delay: 5s;
+            /* Wait for welcome to fade */
         }
 
-        h1 {
-            font-weight: 200;
-            letter-spacing: 0.5rem;
-            opacity: 0.9;
-            text-shadow: 0 0 10px rgba(209, 204, 184, 0.5);
-            margin-bottom: 1rem;
-            font-family: serif;
-            border-bottom: 1px dotted #6b5c4d;
-            padding-bottom: 1rem;
-            width: 100%;
+        @keyframes fadeInPortfolio {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .subtitle {
-            font-size: 1rem;
-            color: #8c7e6b;
-            letter-spacing: 0.2rem;
-            margin-bottom: 2.5rem;
-            font-family: 'Courier New', Courier, monospace;
-        }
+
 
         /* 作品分類網格 */
         .portfolio-grid {
@@ -244,10 +281,12 @@
     <div class="scanlines"></div>
     <div class="frame"></div>
 
-    <div class="content">
-        <h1>DIRECTORY / WIRED</h1>
-        <div class="subtitle">ARCHIVES & FRAGMENTS</div>
+    <div id="welcome-sequence">
+        <h1>Welcome to the Wired.</h1>
+        <p>No matter where you are... everyone is always connected.</p>
+    </div>
 
+    <div class="portfolio-screen">
         <div class="portfolio-grid">
             <a href="#" class="category-link">小說</a>
             <a href="#" class="category-link">站街日記</a>
