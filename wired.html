@@ -316,6 +316,24 @@
             document.documentElement.style.setProperty('--y', y);
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash === '#skip') {
+                const welcome = document.getElementById('welcome-sequence');
+                const portfolio = document.querySelector('.portfolio-screen');
+                if (welcome) {
+                    welcome.style.animation = 'none';
+                    welcome.style.display = 'none';
+                }
+                if (portfolio) {
+                    portfolio.style.animation = 'none';
+                    portfolio.style.opacity = '1';
+                }
+            }
+        });
+    </script>
 </body>
+
 
 </html>
