@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Miraiyahu | 小說 ARCHIVES</title>
+    <style>
+        :root {
+            --x: 50%;
+            --y: 50%;
+            --border-color: #6b5c4d;
+            --text-color: #d1ccb8;
+            --bg-glass: rgba(10, 8, 5, 0.9);
+            --accent: #495945;
+            /* 廢土綠 */
+        }
+
+        body {
+            background-color: #1a1510;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 背景與濾鏡 (延續 WIRED 風格) */
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('wired-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 1;
+            filter: sepia(50%) contrast(120%) brightness(50%);
+            /* 更暗的背景以利閱讀 */
+            pointer-events: none;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-radial-gradient(circle at center, rgba(10, 10, 10, 0.2) 0, transparent 2px);
+            pointer-events: none;
+            filter: contrast(150%) brightness(120%) sepia(30%);
+            opacity: 0.4;
+            z-index: 2;
+        }
+
+        .scanlines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(20, 20, 20, 0.4) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.1), inset 0 0 3px rgba(100, 100, 100, 0.5);
+            border: 2px solid rgba(50, 50, 50, 0.8);
+            box-sizing: border-box;
+        }
+
+        /* 閱讀介面主容器 (左右拆分) */
+        .workspace {
+            position: relative;
+            z-index: 10;
+            width: 90vw;
+            height: 85vh;
+            display: flex;
+            background: var(--bg-glass);
+            border: 2px outset var(--border-color);
+            border-bottom: 2px solid #0f0d0a;
+            border-right: 2px solid #0f0d0a;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            animation: bootUp 1s ease-out forwards;
+        }
+
+        @keyframes bootUp {
+            0% {
+                opacity: 0;
+                transform: scaleY(0.01);
+                filter: brightness(3);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleY(1);
+                filter: brightness(1.5);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        /* 左側目錄區 */
+        .sidebar {
+            width: 250px;
+            border-right: 2px double var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px dotted var(--border-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+            color: #8c7e6b;
+            text-align: center;
+        }
+
+        .directory-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .directory-item {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(107, 92, 77, 0.3);
+            text-decoration: none;
+            display: block;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .directory-item:hover,
+        .directory-item.active {
+            background: rgba(44, 54, 39, 0.6);
+            /* Active/Hover state: Wasteland Green */
+            color: #fff;
+            padding-left: 2rem;
+            box-shadow: inset 4px 0 0 var(--border-color);
+        }
+
+        .directory-item.active::before {
+            content: '> ';
+            font-family: 'Courier New';
+            color: var(--border-color);
+        }
+
+        /* 右側內文閱讀區 */
+        .content-area {
+            flex-grow: 1;
+            padding: 3rem 4rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 滾動條樣式隱藏或特製化以符合復古感 */
+        .content-area::-webkit-scrollbar,
+        .directory-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content-area::-webkit-scrollbar-track,
+        .directory-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 1px solid var(--border-color);
+        }
+
+        .content-area::-webkit-scrollbar-thumb,
+        .directory-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+        }
+
+        .story-title {
+            font-size: 2.5rem;
+            font-weight: 200;
+            letter-spacing: 0.3rem;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 1rem;
+            text-shadow: 0 0 8px rgba(209, 204, 184, 0.4);
+        }
+
+        .story-text {
+            font-size: 1.15rem;
+            line-height: 2.2;
+            letter-spacing: 0.08rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        .story-text p {
+            margin-bottom: 1.5rem;
+            text-indent: 2em;
+            /* 首行縮排 */
+        }
+
+        /* 等待輸入的閃爍游標 */
+        .blinking-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background-color: var(--border-color);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* 返回按鈕 (統一放在左下) */
+        .back-btn-container {
+            padding: 1.5rem;
+            border-top: 2px double var(--border-color);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            height: 3rem;
+            width: 100%;
+            background: linear-gradient(135deg, #495945 0%, #2c2416 100%);
+            color: #d1ccb8;
+            border: 2px outset #7a8c73;
+            border-bottom: 2px solid #1a150d;
+            border-right: 2px solid #1a150d;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+            text-decoration: none;
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .btn:active {
+            border: 2px inset #1a150d;
+            border-bottom: 2px solid #7a8c73;
+            border-right: 2px solid #7a8c73;
+            transform: translate(1px, 1px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="noise-overlay"></div>
+    <div class="scanlines"></div>
+    <div class="frame"></div>
+
+    <div class="workspace">
+        <!-- 左側目錄 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                INDEX / 小說
+            </div>
+            <div class="directory-list">
+                <a href="#" class="directory-item active">血色堂屋</a>
+                <!-- 未來可以新增更多 
+                <a href="#" class="directory-item">第二篇小說</a>
+                -->
+            </div>
+            <div class="back-btn-container">
+                <a href="wired.html" class="btn">
+                    << BACK TO WIRED</a>
+            </div>
+        </div>
+
+        <!-- 右側閱讀區 -->
+        <div class="content-area">
+            <h1 class="story-title">《血色堂屋》</h1>
+            <div class="story-text">
+                <p>等待載入文本紀錄... <span class="blinking-cursor"></span></p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
