@@ -267,7 +267,28 @@
             border-right: 2px solid #7a8c73;
             transform: translate(1px, 1px);
         }
-    </style>
+    
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 100;
+            color: var(--text-color);
+            text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(44, 54, 39, 0.8);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(100, 255, 100, 0.2);
+        }
+</style>
 </head>
 
 <body>
