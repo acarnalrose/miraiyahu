@@ -300,26 +300,9 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
-    <script>
-        document.querySelectorAll('.directory-item').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetEl = document.getElementById(targetId);
-                const contentArea = document.querySelector('.content-area');
-                if (targetEl && contentArea) {
-                    document.querySelectorAll('.directory-item').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                    contentArea.scrollTo({
-                        top: targetEl.offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
+
 </body>
 
 
