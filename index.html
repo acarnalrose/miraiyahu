@@ -38,31 +38,80 @@
             animation: pulse-noise 4s infinite alternate;
         }
 
-        /* 迷離的土色迷霧層 */
-        .mist-soil {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            left: -50%;
-            top: -50%;
-            background: radial-gradient(circle, transparent 10%, #2c2416 80%),
-                conic-gradient(from 0deg at 50% 50%, rgba(73, 89, 69, 0.3), #2c2416, rgba(100, 50, 40, 0.4), #2c2416, rgba(73, 89, 69, 0.3));
-            pointer-events: none;
-            backdrop-filter: blur(5px);
-            opacity: 0.8;
-            animation: drift-mist 25s ease-in-out infinite alternate;
-        }
-
-        /* 交互式的荒原綠色層（跟隨鼠標） */
-        .mist-green {
+        /* 掃描線效果 (Scanlines) */
+        .scanlines {
             position: absolute;
             width: 100%;
             height: 100%;
-            /* 毒草綠 (#495945) 的交互光影 */
-            background: radial-gradient(circle at var(--x) var(--y), rgba(73, 89, 69, 0.4) 0%, transparent 60%);
+            background: linear-gradient(to bottom, transparent 50%, rgba(20, 20, 20, 0.3) 51%);
+            background-size: 100% 4px;
             pointer-events: none;
-            mix-blend-mode: saturation;
-            /* 讓顏色混合產生幻覺感 */
+            z-index: 5;
+        }
+
+        /* 黏稠模糊的色塊容器 (Gooey effect) */
+        .blob-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            filter: url('#goo');
+            overflow: hidden;
+            background-color: #1a1510;
+        }
+
+        /* 色塊共用設定 */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            mix-blend-mode: color-dodge;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* 暗紅/鐵鏽色色塊 */
+        .blob-rust {
+            width: 60vw;
+            height: 60vw;
+            background-color: #6b2d24;
+            top: -20%;
+            left: -10%;
+            animation: float1 18s ease-in-out infinite alternate;
+        }
+
+        /* 迷幻的毒草綠色塊 */
+        .blob-sick {
+            width: 50vw;
+            height: 50vw;
+            background-color: #495945;
+            bottom: -10%;
+            right: -10%;
+            animation: float2 22s ease-in-out infinite alternate-reverse;
+        }
+
+        /* 蒼白/病態色的擠壓感色塊 */
+        .blob-pale {
+            width: 40vw;
+            height: 40vw;
+            background-color: #5c626e;
+            top: 20%;
+            left: 40%;
+            animation: float3 25s linear infinite;
+        }
+
+        /* 隨鼠標移動的深色干擾源 */
+        .blob-cursor {
+            width: 30vw;
+            height: 30vw;
+            background-color: #a69f88;
+            mix-blend-mode: overlay;
+            border-radius: 50%;
+            position: absolute;
+            top: var(--y);
+            left: var(--x);
+            transform: translate(-50%, -50%);
+            transition: left 0.1s linear, top 0.1s linear;
+            filter: blur(50px);
         }
 
         .content {
@@ -103,17 +152,49 @@
             }
         }
 
-        @keyframes drift-mist {
+        @keyframes float1 {
             0% {
-                transform: translate(0, 0) scale(1);
+                transform: translate(0, 0) scale(1) skew(0deg);
             }
 
             50% {
-                transform: translate(2%, 3%) scale(1.05);
+                transform: translate(15vw, 10vh) scale(1.2) skew(10deg);
             }
 
             100% {
-                transform: translate(-3%, -2%) scale(1.02);
+                transform: translate(-5vw, 20vh) scale(0.9) skew(-5deg);
+            }
+        }
+
+        @keyframes float2 {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-20vw, -15vh) scale(1.3) rotate(45deg);
+            }
+
+            100% {
+                transform: translate(10vw, -5vh) scale(0.8) rotate(-20deg);
+            }
+        }
+
+        @keyframes float3 {
+            0% {
+                transform: translate(0, 0) scale(1) skew(0deg);
+            }
+
+            33% {
+                transform: translate(-15vw, 25vh) scale(1.4) skew(-15deg);
+            }
+
+            66% {
+                transform: translate(25vw, -20vh) scale(0.7) skew(20deg);
+            }
+
+            100% {
+                transform: translate(0, 0) scale(1) skew(0deg);
             }
         }
 
@@ -170,9 +251,28 @@
 </head>
 
 <body>
+    <!-- 定義 Gooey (黏著) 效果的 SVG 濾鏡 -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 60 -30"
+                    result="goo" />
+                <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="blob-container">
+        <div class="blob blob-rust"></div>
+        <div class="blob blob-sick"></div>
+        <div class="blob blob-pale"></div>
+        <div class="blob-cursor"></div>
+    </div>
+
     <div class="noise-overlay"></div>
-    <div class="mist-soil"></div>
-    <div class="mist-green"></div>
+    <div class="scanlines"></div>
+
     <div class="content">
         <h1>我在等一場無妄的等待。</h1>
         <div class="buttons">
