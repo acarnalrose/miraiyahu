@@ -275,6 +275,120 @@
             letter-spacing: 0.3rem;
             font-weight: 900;
         }
+
+        /* ---------------- 個人介紹模態框 ---------------- */
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 8, 5, 0.85);
+            /* 深灰土色半透明 */
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1c1813 0%, #2c251e 100%);
+            border: 2px outset #6b5c4d;
+            border-bottom: 2px solid #0f0d0a;
+            border-right: 2px solid #0f0d0a;
+            padding: 3rem;
+            max-width: 600px;
+            width: 80%;
+            color: #d1ccb8;
+            box-shadow: inset 1px 1px 10px rgba(107, 92, 77, 0.2), 5px 5px 30px rgba(0, 0, 0, 0.9);
+            position: relative;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: left;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        /* 模態框標題與裝飾線 */
+        .modal-content h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            letter-spacing: 0.2rem;
+            border-bottom: 1px dotted #6b5c4d;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px rgba(209, 204, 184, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: transparent;
+            color: #d1ccb8;
+            border: 1px solid #6b5c4d;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #d1ccb8;
+            color: #1c1813;
+            box-shadow: 0 0 10px rgba(209, 204, 184, 0.8);
+        }
+
+        .profile-desc {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .profile-desc p {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-details {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px inset #3a3228;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            color: #8c7e6b;
+            width: 120px;
+        }
+
+        .detail-value {
+            color: #d1ccb8;
+            text-shadow: 0 0 3px rgba(209, 204, 184, 0.3);
+        }
     </style>
     <script>
         // 獲取鼠標位置並更新 CSS 變量
@@ -317,10 +431,71 @@
     <div class="content">
         <h1>我在等一場無妄的等待。</h1>
         <div class="buttons">
-            <a href="#" class="btn">現實世界</a>
+            <a href="#" class="btn" id="btn-realworld">現實世界</a>
             <a href="#" class="btn btn-wired">WIRED</a>
         </div>
     </div>
+
+    <!-- 個人介紹模態框 Overlay -->
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-content">
+            <h2>現實世界
+                <button class="close-btn" id="close-modal">X</button>
+            </h2>
+            <div class="profile-desc">
+                <p>你好，歡迎來到這裡。這裡是無妄之境的入口。</p>
+                <p>在現實世界中，我是一名穿梭於程式碼與想像力之間的建造者，試圖在數位荒原中留下一些溫度的痕跡。</p>
+
+                <div class="profile-details">
+                    <div class="detail-row">
+                        <span class="detail-label">STATUS:</span>
+                        <span class="detail-value">ONLINE (IDLE)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">CLASS:</span>
+                        <span class="detail-value">DEVELOPER / DESIGNER</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">INTERESTS:</span>
+                        <span class="detail-value">CYBERPUNK, RETRO-WEB, PHILOSOPHY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模態框互動邏輯
+        const btnRealWorld = document.getElementById('btn-realworld');
+        const modalOverlay = document.getElementById('about-modal');
+        const btnCloseModal = document.getElementById('close-modal');
+
+        // 打開模態框
+        btnRealWorld.addEventListener('click', (e) => {
+            e.preventDefault(); // 防止 a 標籤跳轉
+            modalOverlay.classList.add('active');
+        });
+
+        // 點擊 X 或背景層關閉模態框
+        btnCloseModal.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+
+        // 獲取鼠標位置並更新 CSS 變量 (既有邏輯)
+        document.addEventListener('mousemove', (e) => {
+            const body = document.body;
+            const x = (e.clientX / body.clientWidth * 100) + '%';
+            const y = (e.clientY / body.clientHeight * 100) + '%';
+            document.documentElement.style.setProperty('--x', x);
+            document.documentElement.style.setProperty('--y', y);
+        });
+    </script>
 </body>
 
 </html>
