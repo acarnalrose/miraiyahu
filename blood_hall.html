@@ -641,21 +641,49 @@
     </div>
 
     <script>
-        document.querySelectorAll('.directory-item').forEach(link => {
+        const directoryItems = document.querySelectorAll('.directory-item');
+        const contentArea = document.querySelector('.content-area');
+
+        // 點擊目錄滾動
+        directoryItems.forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
                 const targetEl = document.getElementById(targetId);
-                const contentArea = document.querySelector('.content-area');
                 if (targetEl && contentArea) {
-                    document.querySelectorAll('.directory-item').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
                     contentArea.scrollTo({
                         top: targetEl.offsetTop,
                         behavior: 'smooth'
                     });
                 }
             });
+        });
+
+        // 滾動時高亮當前章節
+        const observerOptions = {
+            root: contentArea,
+            rootMargin: '0px 0px -50% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    directoryItems.forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('href') === `#${id}`) {
+                            item.classList.add('active');
+                            // 若目錄過長，確保高亮的項目始終可見
+                            item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('h2[id]').forEach(h2 => {
+            observer.observe(h2);
         });
     </script>
 </body>
