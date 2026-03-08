@@ -17,9 +17,11 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: "MingLiU", "PMingLiU", "TW-Sung", "BiauKai", serif;
+            /* 頹廢/復古字型：優先使用楷體與宋體 */
+            font-family: "Kaiti TC", "BiauKai", "DFKai-SB", "TW-Kai", "Kaiti", "PMingLiU", serif;
             overflow: hidden;
-            perspective: 3000px;
+            perspective: 3500px;
+            /* Deeper perspective for dramatic flip */
         }
 
         /* Visual noise & background */
@@ -107,7 +109,8 @@
             right: 0;
             transform-origin: left center;
             transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+            /* Smoother, lighter paper flip feeling */
+            transition: transform 1.2s cubic-bezier(0.15, 0.9, 0.35, 1);
         }
 
         .page.flipped {
@@ -123,7 +126,8 @@
             background-color: var(--paper-bg);
             background-image:
                 radial-gradient(circle at 20% 80%, rgba(139, 115, 85, 0.08) 0%, transparent 60%),
-                radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at center, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
             box-sizing: border-box;
             padding: 8vh 8vw;
             overflow: hidden;
@@ -173,40 +177,48 @@
             text-align: center;
             letter-spacing: 2rem;
             margin-top: 40%;
-            border-bottom: 2px solid #6b5c4d;
+            border-bottom: 2px solid rgba(107, 92, 77, 0.5);
             padding-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .subtitle {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             letter-spacing: 1rem;
             margin-top: 3rem;
             opacity: 0.8;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         h2.date {
-            font-size: 1.8rem;
-            border-bottom: 1px dashed #6b5c4d;
+            font-size: 2rem;
+            border-bottom: 1px dashed rgba(107, 92, 77, 0.5);
             padding-bottom: 0.8rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             font-weight: bold;
+            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1);
         }
 
         .quote {
             text-align: center;
             font-style: italic;
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            color: #4a3e31;
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            color: #3d3220;
+            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
         }
 
         .para {
-            font-size: 1.25rem;
-            line-height: 2;
-            text-indent: 2.5rem;
-            margin-bottom: 1.2rem;
+            /* 頹廢感：加上極細微的模糊黑影，讓字看起來像墨水暈開或是舊打字機印的 */
+            font-size: 1.35rem;
+            line-height: 2.2;
+            text-indent: 2.7rem;
+            margin-bottom: 1.5rem;
             text-align: justify;
+            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.05rem;
+            color: rgba(30, 24, 15, 0.95);
         }
 
         .click-layer {
@@ -226,28 +238,29 @@
             right: 0;
         }
 
+        /* subtle hover effect to indicate page turn */
         .click-layer.prev:hover {
-            background: linear-gradient(to right, rgba(255, 255, 255, 0.02), transparent);
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.03), transparent);
         }
 
         .click-layer.next:hover {
-            background: linear-gradient(to left, rgba(255, 255, 255, 0.02), transparent);
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.03), transparent);
         }
 
         .page-num {
             position: absolute;
-            bottom: 2rem;
+            bottom: 3rem;
             font-size: 1.1rem;
             color: #8c7e6b;
             font-family: 'Courier New', monospace;
         }
 
         .front .page-num {
-            right: 3rem;
+            right: 4rem;
         }
 
         .back .page-num {
-            left: 3rem;
+            left: 4rem;
         }
 
         .blank-center {
@@ -258,7 +271,7 @@
             height: 100%;
             font-size: 2rem;
             opacity: 0.3;
-            letter-spacing: 1rem;
+            letter-spacing: 1.5rem;
         }
     </style>
 </head>
@@ -276,7 +289,7 @@
             <div class="book">
 
                 <!-- P1: Cover & Inside Left Blank -->
-                <div class="page" id="p1" style="z-index: 9;">
+                <div class="page" id="p1" style="z-index: 10;">
                     <div class="front">
                         <h1 class="title">站街日記</h1>
                         <p class="subtitle">我叫婷婷。</p>
@@ -288,7 +301,7 @@
                 </div>
 
                 <!-- P2: Entry 1 Pg 1 & Pg 2 -->
-                <div class="page" id="p2" style="z-index: 8;">
+                <div class="page" id="p2" style="z-index: 9;">
                     <div class="front">
                         <h2 class="date">20XX 年 01 月 06 日</h2>
                         <div class="quote">「怎麼說呢，愛這種東西，我們註定一貧如洗。」</div>
@@ -311,7 +324,7 @@
                 </div>
 
                 <!-- P3: Entry 1 Pg 3 & Pg 4 -->
-                <div class="page" id="p3" style="z-index: 7;">
+                <div class="page" id="p3" style="z-index: 8;">
                     <div class="front">
                         <div class="para">我帶上門，從頭到腳打量了她，比我高一點的個子、披肩發、粉色 JK
                             制服、白色過膝襪。打扮是個小姑娘樣子，可嗓子又像個沒發育好的小男孩。就那張臉，我左看右看看不出來男女。她好像被我盯惱了，別過臉去。我也低下頭摸摸鼻子，我剛剛直勾勾地盯著確實不大禮貌，我打算主動打破僵局，畢竟人是給了錢的。
@@ -323,7 +336,7 @@
                     </div>
                     <div class="back">
                         <div class="para">
-                            我有點頭大，我祇是想出來接一單，這幾天好有飯吃，沒想到碰到了個麻煩。但小孩子淚如雨下的樣子我看著也不能做到無動於衷，從包裡拿了一張衛生紙給她擦眼淚。她突然抱住我，讓我有些錯愕，淚水打濕了我的臉頰，她嗚咽：「姐姐，你把我看成女孩子好不好，你上我一次好不好。」
+                            我有點頭大，我祇是想出來接一單，這幾天好有飯吃，沒想到碰到了個麻煩。但小孩子淚如雨下的樣子我看著也不能做到無動於衷，從包裏拿了一張衛生紙給她擦眼淚。她突然抱住我，讓我有些錯愕，淚水打濕了我的臉頰，她嗚咽：「姐姐，你把我看成女孩子好不好，你上我一次好不好。」
                         </div>
                         <div class="para">
                             我腦子有點炸，什麼叫把她當成女孩子，所以他是男孩子嘍？想讓我上他，為什麼不直接找男人？我腦子裡突然蹦出了個詞「跨性別女性」。我好像在某年某月的新聞推送裡看過，什麼未成年男孩私自服用雌激素什麼的。我當時也沒多想，祇是覺得什麼人想過什麼樣的日子都不關別人事情，現在的媒體也是怪閑的，我也沒見大家哪一個活得像個人。
@@ -333,7 +346,7 @@
                 </div>
 
                 <!-- P4: Entry 1 Pg 5 & Pg 6 -->
-                <div class="page" id="p4" style="z-index: 6;">
+                <div class="page" id="p4" style="z-index: 7;">
                     <div class="front">
                         <div class="para">
                             她好像平靜了一些，用已經在手裡揉皺了的紙巾擦了眼淚。我也不知道說什麼，就看著她。她有些慌張：「是不是錢不夠，不夠我可以再加上一點的。」「沒有，挺夠的，就是我也沒操過人，沒什麼技術可言，把你弄疼了可不怪我。」我也沒有什麼別的想法，拿錢辦事，客人想要什麼玩法我就陪，祇要錢給夠。當雞還講什麼原則，道德，統統都是放屁而已。
@@ -356,7 +369,7 @@
                 </div>
 
                 <!-- P5: Entry 1 Pg 7 & Pg 8 (End of Entry 1) -->
-                <div class="page" id="p5" style="z-index: 5;">
+                <div class="page" id="p5" style="z-index: 6;">
                     <div class="front">
                         <div class="para">這句話其實就是在胡扯，誰能完全不在乎別人說什麼呢，我們都活在別人的口中。安慰的話，聽聽就算了，誰能真信。</div>
                         <div class="para">
@@ -378,7 +391,7 @@
                 </div>
 
                 <!-- P6: Entry 2 Pg 1 & Pg 2 -->
-                <div class="page" id="p6" style="z-index: 4;">
+                <div class="page" id="p6" style="z-index: 5;">
                     <div class="front">
                         <h2 class="date">2023年11月28日 —— 屍斑</h2>
                         <div class="quote">「我身上爬滿了屍斑和肉蟲。」</div>
@@ -403,7 +416,7 @@
                 </div>
 
                 <!-- P7: Entry 2 Pg 3 & Pg 4 -->
-                <div class="page" id="p7" style="z-index: 3;">
+                <div class="page" id="p7" style="z-index: 4;">
                     <div class="front">
                         <div class="para">
                             男人點了根煙，聞起來就很廉價，也是，有錢人為什麼會來找我這種最底層的雞，我還是很有自知之明的。我以為這場刑罰終於要結束了，可是我總是低估人的殘暴，人總是說野獸殘暴，可是真正的殘暴從來不明目張膽。男人把煙頭滅在我背脊，饜足地把煙頭塞進我的嘴裡逼迫我吞下去。我被摀住了嘴巴，只能發出嗚嗚的求饒聲。結果卻適得其反，一個巴掌狠狠地劈在了我的臉上。我只能強硬吞嚥下去，很乾、很硬、很苦。我嘗試了幾次都無果，最後不上不下地卡在了喉嚨裡。男人適時鬆開了手，末了穿好褲子，掏出三百塊塞進我還沒有完全合攏的肉穴裡。
@@ -428,39 +441,49 @@
                 </div>
 
                 <!-- P8: Entry 2 Pg 5 & Pg 6 -->
-                <div class="page" id="p8" style="z-index: 2;">
+                <div class="page" id="p8" style="z-index: 3;">
                     <div class="front">
                         <div class="para">我們不怕疼，我們只怕活不下去，我們怕餓肚子。</div>
                         <div class="para">我數了數身上的疤，可能有遺落，很多地方我自己根本看不到。屁股、後背、胸口。零零散散得有十幾處疤，都是紅紅的，鼓鼓的。都是我的屍斑，是我的死亡證明。
                         </div>
                         <div class="para">我也不知道這樣活著有什麼意思，但是一直就是像賴皮狗一樣地活著，不願意死。也許我其實已經早就死了，不然為什麼我身上密密麻麻爬滿了屍斑。</div>
-                        <div class="para">
-                            筒子樓裡的姐妹其實都不大親近我，她們都覺得我是個癲的。我有時候會問她們身上是不是也長了很多屍斑，我們到底是死了還是活著，活著那為什麼會長屍斑，死了又為什麼會餓肚子。她們都覺得我腦子有病，晦氣。連雞都瞧不上我，可能我是真的瘋的。我偶爾聽見她們聚在一起說我會拿刀割自己胳膊，是個精神病。
-                        </div>
                         <span class="page-num">- 14 -</span>
                     </div>
                     <div class="back">
                         <div class="para">
+                            筒子樓裡的姐妹其實都不大親近我，她們都覺得我是個癲的。我有時候會問她們身上是不是也長了很多屍斑，我們到底是死了還是活著，活著那為什麼會長屍斑，死了又為什麼會餓肚子。她們都覺得我腦子有病，晦氣。連雞都瞧不上我，可能我是真的瘋的。我偶爾聽見她們聚在一起說我會拿刀割自己胳膊，是個精神病。
+                        </div>
+                        <div class="para">
                             我看著我的胳膊，爬滿了細長的粉色的肉蟲，和那些屍斑一樣，很可愛。就長在我的身體裡，越來越多，直到它們把我啃食到腐爛。我愛撫著它們，它們都是我的朋友，我可以聽見它們在哭在笑。它們在我身上安了家，我沒有家，但是我樂意給它們一個家，只要它們不嫌棄我是個搖搖欲墜的危房。
                         </div>
+                        <span class="page-num">- 15 -</span>
+                    </div>
+                </div>
+
+                <!-- P9: Entry 2 Pg 7 & Pg 8 -->
+                <div class="page" id="p9" style="z-index: 2;">
+                    <div class="front">
                         <div class="para">嘔過之後，我也餓了。正好到了晚上，我要下樓去買飯吃。其實我可以餓著，但我怕那些小傢伙餓著，我不能死，死了它們就沒有家了，太可憐了。</div>
                         <div class="para">
                             樓下的麵包店的邊角料是我最經常的晚飯，我羨慕櫥窗裡的精緻麵包，可我只能吃得起邊角料，老闆娘看見又是我，不耐煩地把邊角料扔給我，我整整齊齊把三張皺巴巴的一塊錢擺在她面前，拿了邊角料就走，聽見老闆娘嘀嘀咕咕些我聽不懂的方言。那也無所謂了。
                         </div>
                         <div class="para">
                             破敗的屋子裡連窗戶網都是爛的，打開窗戶的一條縫，今天是真的很冷。我嚼著麵包邊，數這個月掙了多少錢，數來數去都是一個數，好無聊。明天也是，往後也是，一樣的日子。</div>
-                        <span class="page-num">- 15 -</span>
+                        <span class="page-num">- 16 -</span>
                     </div>
-                </div>
-
-                <!-- P9: Entry 2 Pg 7 & Back Cover -->
-                <div class="page" id="p9" style="z-index: 1;">
-                    <div class="front">
+                    <div class="back">
                         <div class="para">
                             我又開始想自己死沒死，畢竟死人才會像我這樣十年如一日，雷打不動的。可是死人可不會吃東西，也不會想這想那。我也不知道我是活著還是活過。只知道，我的身上爬了越來越多的屍斑和肉蟲。
                         </div>
+                        <span class="page-num">- 17 -</span>
+                    </div>
+                </div>
+
+                <!-- P10: End Page -->
+                <div class="page" id="p10" style="z-index: 1;">
+                    <div class="front">
                         <div class="blank-center" style="margin-top: 5rem; opacity: 0.2; font-size: 1.5rem;">未完待續</div>
-                        <span class="page-num">- 16 -</span>
+                        <span class="page-num">- 18 -</span>
                     </div>
                     <div class="back" style="background: rgba(44, 36, 22, 0.9); color: #8c7e6b; text-align: center;">
                         <h1 style="margin-top: 45%; border: none; letter-spacing: 1rem; opacity: 0.5;">END</h1>
@@ -471,7 +494,7 @@
 
             <script>
                 let currentPage = 1;
-                const totalPages = 9;
+                const totalPages = 10;
 
                 function turnPage(dir) {
                     if (dir === 1 && currentPage <= totalPages) {
