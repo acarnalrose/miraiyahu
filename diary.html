@@ -6,507 +6,285 @@
     <title>Miraiyahu | 站街日記</title>
     <style>
         :root {
-            --paper-bg: #d9d4c5;
-            --text-color: #2c2416;
+            --x: 50%;
+            --y: 50%;
+            --border-color: #6b5c4d;
+            --text-color: #d1ccb8;
+            --bg-glass: rgba(10, 8, 5, 0.9);
+            --accent: #495945;
         }
 
         body {
             background-color: #1a1510;
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: "Kaiti TC", "BiauKai", "DFKai-SB", "TW-Kai", "Kaiti", "PMingLiU", serif;
+            font-family: serif;
             overflow: hidden;
-            perspective: 4000px;
+            position: relative;
         }
 
-        /* Visual noise & background */
+        /* 延續 WIRED 復古風格 */
         .bg-image {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             background-image: url('wired-bg.jpg');
             background-size: cover;
             background-position: center;
-            opacity: 0.3;
-            filter: grayscale(50%) sepia(30%) brightness(50%);
-            z-index: -3;
+            opacity: 0.5;
+            z-index: 1;
+            filter: sepia(50%) contrast(120%) brightness(50%);
             pointer-events: none;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-radial-gradient(circle at center, rgba(10, 10, 10, 0.2) 0, transparent 2px);
+            pointer-events: none;
+            filter: contrast(150%) brightness(120%) sepia(30%);
+            opacity: 0.4;
+            z-index: 2;
         }
 
         .scanlines {
             position: absolute;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.5) 51%);
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(20, 20, 20, 0.4) 51%);
             background-size: 100% 4px;
-            z-index: -2;
             pointer-events: none;
+            z-index: 5;
         }
 
-        .noise {
+        .frame {
             position: absolute;
-            width: 100vw;
-            height: 100vh;
-            opacity: 0.3;
-            background-image: radial-gradient(circle, #000 1px, transparent 1px);
-            background-size: 4px 4px;
-            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 20;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.1), inset 0 0 3px rgba(100, 100, 100, 0.5);
+            border: 2px solid rgba(50, 50, 50, 0.8);
+            box-sizing: border-box;
         }
 
-        .close-btn {
-            position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 2000;
-            color: #d1ccb8;
-            font-size: 1.2rem;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #d1ccb8;
-            font-family: 'Courier New', Courier, monospace;
-            transition: all 0.2s;
-        }
-
-        .close-btn:hover {
-            background: #d1ccb8;
-            color: #1a1510;
-        }
-
-        .book {
+        /* 閱讀介面主容器 (左右拆分) */
+        .workspace {
             position: relative;
+            z-index: 10;
             width: 100vw;
             height: 100vh;
-            max-width: none;
-            max-height: none;
-            transform-style: preserve-3d;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-            animation: fadeInBook 1.5s ease-out forwards;
+            display: flex;
+            background: var(--bg-glass);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            animation: bootUp 1s ease-out forwards;
         }
 
-        @keyframes fadeInBook {
+        @keyframes bootUp {
             0% {
                 opacity: 0;
-                transform: scale(0.9) translateY(20px);
+                transform: translateY(10px);
             }
 
             100% {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: translateY(0);
             }
         }
 
-        .page {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            right: 0;
-            transform-origin: left center;
-            transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.15, 0.9, 0.35, 1);
+        /* 左側目錄區 */
+        .sidebar {
+            width: 250px;
+            border-right: 2px double var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .page.flipped {
-            transform: rotateY(-180deg);
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px dotted var(--border-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+            color: #8c7e6b;
+            text-align: center;
         }
 
-        .front,
-        .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            background-color: var(--paper-bg);
-            background-image:
-                radial-gradient(circle at 20% 80%, rgba(139, 115, 85, 0.08) 0%, transparent 60%),
-                radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at center, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
-            box-sizing: border-box;
-            /* Container for CSS columns */
+        .directory-list {
+            list-style: none;
             padding: 0;
             margin: 0;
-            overflow: hidden;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .directory-item {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(107, 92, 77, 0.3);
+            text-decoration: none;
+            display: block;
             color: var(--text-color);
-        }
-
-        /* Inner content container to hold columns and keep margins exact */
-        .content-area {
-            position: absolute;
-            top: 15vh;
-            bottom: 15vh;
-            left: 12vw;
-            right: 12vw;
-            /* The magic: multi-column layout allows text to automatically flow */
-            column-width: 100vw;
-            /* Force single column per page width */
-            column-gap: 20vw;
-            /* Massive gap so text flows out of the bounding box */
-            /* We will translate the wrapper dynamically per page! */
-        }
-
-        /* Spine shading */
-        .front {
-            border-left: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 2px 8px 8px 2px;
-            box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.1), 2px 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .front::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 40px;
-            height: 100%;
-            background: linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, transparent 100%);
-            z-index: 50;
-            pointer-events: none;
-        }
-
-        .back {
-            transform: rotateY(180deg);
-            border-right: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 8px 2px 2px 8px;
-            box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.1), -2px 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .back::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 40px;
-            height: 100%;
-            background: linear-gradient(to left, rgba(0, 0, 0, 0.15) 0%, transparent 100%);
-            z-index: 50;
-            pointer-events: none;
-        }
-
-        h1.title {
-            /* Reduced title size */
-            font-size: 3.5rem;
-            text-align: center;
-            letter-spacing: 1.5rem;
-            margin-top: 40%;
-            border-bottom: 2px solid rgba(107, 92, 77, 0.5);
-            padding-bottom: 1.5rem;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .subtitle {
-            text-align: center;
-            font-size: 2rem;
-            letter-spacing: 1rem;
-            margin-top: 3rem;
-            opacity: 0.8;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        h2.date {
-            font-size: 1.8rem;
-            border-bottom: 1px dashed rgba(107, 92, 77, 0.5);
-            padding-bottom: 0.8rem;
-            margin-bottom: 2rem;
-            font-weight: bold;
-            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1);
-            /* Prevent heading from breaking across columns */
-            break-after: avoid;
-            page-break-after: avoid;
-        }
-
-        .quote {
-            text-align: center;
-            font-style: italic;
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            color: #3d3220;
-            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-
-        .para {
-            font-size: 1.25rem;
-            line-height: 2.2;
-            text-indent: 2.5rem;
-            margin-bottom: 1.5rem;
-            text-align: justify;
-            text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
-            letter-spacing: 0.05rem;
-            color: rgba(30, 24, 15, 0.95);
-        }
-
-        .click-layer {
-            position: absolute;
-            top: 0;
-            height: 100vh;
-            width: 45vw;
-            z-index: 1000;
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.2s;
             cursor: pointer;
         }
 
-        .click-layer.prev {
-            left: 0;
+        .directory-item:hover,
+        .directory-item.active {
+            background: rgba(44, 54, 39, 0.6);
+            color: #fff;
+            padding-left: 2rem;
+            box-shadow: inset 4px 0 0 var(--border-color);
         }
 
-        .click-layer.next {
-            right: 0;
+        .directory-item.active::before {
+            content: '> ';
+            font-family: 'Courier New';
+            color: var(--border-color);
         }
 
-        .click-layer.prev:hover {
-            background: linear-gradient(to right, rgba(255, 255, 255, 0.03), transparent);
+        /* 右側內文閱讀區 */
+        .content-area {
+            flex-grow: 1;
+            padding: 3rem 4rem;
+            overflow-y: auto;
+            position: relative;
         }
 
-        .click-layer.next:hover {
-            background: linear-gradient(to left, rgba(255, 255, 255, 0.03), transparent);
+        .content-area::-webkit-scrollbar,
+        .directory-list::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .page-num {
-            position: absolute;
-            bottom: 3rem;
-            font-size: 1.1rem;
-            color: #8c7e6b;
-            font-family: 'Courier New', monospace;
-            z-index: 100;
+        .content-area::-webkit-scrollbar-track,
+        .directory-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 1px solid var(--border-color);
         }
 
-        .front .page-num {
-            right: 4rem;
+        .content-area::-webkit-scrollbar-thumb,
+        .directory-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
         }
 
-        .back .page-num {
-            left: 4rem;
+        .story-title {
+            font-size: 2.5rem;
+            font-weight: 200;
+            letter-spacing: 0.3rem;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 1rem;
+            text-shadow: 0 0 8px rgba(209, 204, 184, 0.4);
         }
 
-        .blank-center {
+        .story-text {
+            font-size: 1.15rem;
+            line-height: 2.2;
+            letter-spacing: 0.08rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        .blinking-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background-color: var(--border-color);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* 返回按鈕 */
+        .back-btn-container {
+            padding: 1.5rem;
+            border-top: 2px double var(--border-color);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100%;
-            font-size: 2rem;
-            opacity: 0.3;
-            letter-spacing: 1.5rem;
-            margin-top: 30vh;
+            justify-content: center;
+            box-sizing: border-box;
+            height: 3rem;
+            width: 100%;
+            background: linear-gradient(135deg, #495945 0%, #2c2416 100%);
+            color: #d1ccb8;
+            border: 2px outset #7a8c73;
+            border-bottom: 2px solid #1a150d;
+            border-right: 2px solid #1a150d;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+            text-decoration: none;
+            transition: all 0.05s ease;
+            cursor: pointer;
         }
 
-        /* The hidden container holding ALL the text.
-           We use JS to clone this into each page's content-area and offset columns. */
-        #master-content {
-            display: none;
+        .btn:active {
+            border: 2px inset #1a150d;
+            border-bottom: 2px solid #7a8c73;
+            border-right: 2px solid #7a8c73;
+            transform: translate(1px, 1px);
         }
     </style>
 </head>
 
 <body>
     <div class="bg-image"></div>
+    <div class="noise-overlay"></div>
     <div class="scanlines"></div>
-    <div class="noise"></div>
-    <a href="wired.html#skip" class="close-btn">
-        << 返回 WIRED</a>
+    <div class="frame"></div>
 
-            <div class="click-layer prev" onclick="turnPage(-1)"></div>
-            <div class="click-layer next" onclick="turnPage(1)"></div>
-
-            <div class="book" id="book">
-
-                <!-- Cover Page -->
-                <div class="page" id="p1" style="z-index: 100;">
-                    <div class="front" style="padding: 12vh 12vw;">
-                        <h1 class="title">站街日記</h1>
-                        <p class="subtitle">我叫婷婷。</p>
-                    </div>
-                    <div class="back" style="padding: 12vh 12vw;">
-                        <div class="blank-center">荒蕪的城市，荒蕪的日記。</div>
-                        <span class="page-num">- 1 -</span>
-                    </div>
-                </div>
-
-                <!-- JS will dynamically inject text pages here -->
+    <div class="workspace">
+        <!-- 左側目錄 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                INDEX / 日記
             </div>
-
-            <!-- This is the continuous text. JS will pagify it perfectly. -->
-            <div id="master-content">
-                <h2 class="date">20XX 年 01 月 06 日</h2>
-                <div class="quote">「怎麼說呢，愛這種東西，我們註定一貧如洗。」</div>
-                <div class="para">今天的這一單，其實我不知道該怎麼說。</div>
-                <div class="para">我像往常一樣對著手機裡對方發來的地址，手機是三年前的
-                    iphone，為了在學校裡掙點面子，我用三個月所有的「嫖資」買了這部手機。但是現在已經卡得要咽氣，巷子裡信號也是有夠差勁。</div>
-                <div class="para">
-                    七拐八拐到了一個偏僻的小旅店，招牌已經掉了大半。我大步邁進去，前臺也懶得抬頭，對著鏡子抹著街邊十塊錢，豔麗到刺眼的雜牌口紅。樓梯把手好像好久沒有人擦過，也不知道這裡的衛生條件怎麼差得和筒子樓不相上下。陳年的霉味和廉價的檸檬空氣清新劑味混雜在灰塵遍佈的空氣裡，嗆得人鼻子癢癢。
-                </div>
-                <div class="para">我這種人，估計這輩子也祇能流離在這種地方，行走在骯髒交叉之間。</div>
-                <div class="para">
-                    隨手按了一下牆上快要掉落的金色牆紙，沿著走廊嚮前。小旅店根本談不上什麼隔音，中年男人操著土話罵娘、淋浴間傳來的水聲、女人做戲一樣的呻吟都聽得一清二楚。我摸索到信息裡說的門牌號
-                    312。再打開手機確認了一遍，敲響了老舊木頭門。我聽見裡面的人的腳步聲了，她好像在門口站了一會兒，有點遲疑。我再次叩響房門的時候，門帶著吱呀的聲音，嚮我漏出了一條縫，然後再大敞開。我和門裡的人四目相對，她又立刻閃躲開。我尷尬地想再看一眼門牌號，可是她卻用有點低啞的聲音說：「姐姐，您沒找錯，進來吧。」
-                </div>
-                <div class="para">我帶上門，從頭到腳打量了她，比我高一點的個子、披肩發、粉色 JK
-                    制服、白色過膝襪。打扮是個小姑娘樣子，可嗓子又像個沒發育好的小男孩。就那張臉，我左看右看看不出來男女。她好像被我盯惱了，別過臉去。我也低下頭摸摸鼻子，我剛剛直勾勾地盯著確實不大禮貌，我打算主動打破僵局，畢竟人是給了錢的。
-                </div>
-                <div class="para">
-                    可是她卻先開了口，漲紅了臉憋出一句：「你，能不能，上我。」我傻逼了，腦子裡還在想，這到底是他媽的男孩還是女孩啊？男孩，異裝癖，瘋了？女孩，同性戀？我開口問了句：「小孩，你到底是男孩還是女孩啊，成年了嗎？」她卻一愣，低下了頭，用我幾乎聽不見的聲音說了一句：「我、我是女孩子。」接下來卻再也憋不住，摘下了剛剛看似倔強的假面，眼睛始終不敢和我對視，帶哭腔說：「不知道，我不知道。」
-                </div>
-                <div class="para">
-                    我有點頭大，我祇是想出來接一單，這幾天好有飯吃，沒想到碰到了個麻煩。但小孩子淚如雨下的樣子我看著也不能做到無動於衷，從包裏拿了一張衛生紙給她擦眼淚。她突然抱住我，讓我有些錯愕，淚水打濕了我的臉頰，她嗚咽：「姐姐，你把我看成女孩子好不好，你上我一次好不好。」
-                </div>
-                <div class="para">
-                    我腦子有點炸，什麼叫把她當成女孩子，所以他是男孩子嘍？想讓我上他，為什麼不直接找男人？我腦子裡突然蹦出了個詞「跨性別女性」。我好像在某年某月的新聞推送裡看過，什麼未成年男孩私自服用雌激素什麼的。我當時也沒多想，祇是覺得什麼人想過什麼樣的日子都不關別人事情，現在的媒體也是怪閑的，我也沒見大家哪一個活得像個人。
-                </div>
-                <div class="para">
-                    她好像平靜了一些，用已經在手裡揉皺了的紙巾擦了眼淚。我也不知道說什麼，就看著她。她有些慌張：「是不是錢不夠，不夠我可以再加上一點的。」「沒有，挺夠的，就是我也沒操過人，沒什麼技術可言，把你弄疼了可不怪我。」我也沒有什麼別的想法，拿錢辦事，客人想要什麼玩法我就陪，祇要錢給夠。當雞還講什麼原則，道德，統統都是放屁而已。
-                </div>
-                <div class="para">
-                    我扒了她的裙子，發現她的內褲也是女士的三角內褲，上面還有小花紋。我也不是沒被人操過後門，隨口問了她一句：「小孩，你後面洗了嗎，擴了嗎。」她用幾近不可聞的低喃回答我：「洗了，潤滑油和假雞雞在包裡。」我看嚮她手指的方向，從包裡拿出來假陽具給自己戴上，在上面擠了一點潤滑油，塗均勻。又擠了一點在手上，給她擴張。她讓我背入她，也許她祇是不想讓看見她的男性生殖器吧。我倒是沒什麼意見，反正都無所謂。
-                </div>
-                <div class="para">
-                    她的後穴挺粉的，也挺緊，估計是沒怎麼自己玩過。這一次可能要遭罪，估計是會出血。我擴到能進去三個手指頭的時候就操進去了。我插進去的動作挺慢的，我看不到她的表情，可是她微微顫抖的身體告訴我，她挺痛的。我沒有問她要不要繼續，她自己沒說停，我沒必要多嘴一句。第一次上別人，我注視著她發抖的背脊，聽著她無意識的呻吟，我好像看見了我剛入行時候的樣子。我鬼使神差得摸著她的背脊，對她說了一聲別怕，她好像又哭了，我也不知道。
-                </div>
-                <div class="para">我對過程沒什麼感覺和特別的印象，畢竟這麼久，我對做愛這件事情近乎完全麻木，不論是誰上誰。</div>
-                <div class="para">
-                    所有都結束之後，我剛想走人的時候，她突然拉住我說：「姐姐，你覺得我是女孩子嗎？」我沒有給別人做心靈雞湯的愛好，我自己過成這個樣子，沒有資格給別人指點迷津。可是我也不願意看她再繼續哭下去，就回答：「沒必要在意別人怎麼看，你自己覺得是就是。」
-                </div>
-                <div class="para">這句話其實就是在胡扯，誰能完全不在乎別人說什麼呢，我們都活在別人的口中。安慰的話，聽聽就算了，誰能真信。</div>
-                <div class="para">
-                    可她還是不死心地拽住我的衣角，說：「如果也去賣，是不是就可以被當成女孩子了。」我輕笑出聲，淡淡地說了一句：「小孩，到時候你都不算什麼男人女人了，因為祇要你出去賣，就別想有人把你當人。」</div>
-                <div class="para">
-                    我說完這句話就轉身走了，走廊裡男人的叫罵聲，洗澡的水聲，女人的呻吟好像都停了，我祇隱隱約約地聽見某個房間裡傳來崩潰的哭聲。可是我能做什麼呢，大家的生活都是一地雞毛，爛攤子沒人收捨。我沒有精力再去可憐任何人，我甚至不屑於去可憐自己。
-                </div>
-                <div class="para">今天又掙了 1500，夠過幾天日子了，我也許可以給自己買一隻名牌口紅，我看學校裡的小姑娘都在用的那種。</div>
-                <div class="para">
-                    至於那個小孩，她在我出門前問了我一句話，用嘶啞的聲音喊的：「那還可能有人愛我嗎？」我沒有回答她，我自己也不知道這個問題的答案，有人會愛我嗎？我連自己都不愛，就別可憐巴巴地想著有人愛我了，愛這玩意兒，虛無縹緲又不切實際，什麼都不如錢靠得住。
-                </div>
-                <div class="para">在所謂愛的世界裡，有的人富有到可以肆意揮揮，毫不在意。可是我們這種人，窮極一生，也可能討不來一星半點的施捨。</div>
-                <br><br>
-                <h2 class="date" style="margin-top: 2rem;">2023年11月28日 —— 屍斑</h2>
-                <div class="quote">「我身上爬滿了屍斑和肉蟲。」</div>
-                <div class="para">我總覺得這個用紙箱子搭的床板子已經要壽終正寢了。梅雨季節，它們都軟趴趴的，像我用口水潤濕前男人的陰莖。可是他們相反，陰莖被濕潤後會變硬，可紙箱子會變軟，我搞不懂。
-                </div>
-                <div class="para">
-                    床墊也是從垃圾堆裡拖回來的，用抹布擦了無數遍，還是擋不住漫出來的腐臭和酸。男人射出來的精液和原本的污漬混雜，早已經分不清楚。只能看出床墊上一塊一塊，發黃、發綠的，是它的醜陋瘀青。我在呻吟，床墊在𠳐吱叫，近乎同步，所以它是不是也在做愛。
-                </div>
-                <div class="para">我們是好朋友。</div>
-                <div class="para">
-                    學校裡的那些好閨蜜會一起吃飯、一起上廁所、一起回寢室。好朋友應該什麼事情都在一起做，就像我和床墊一起呻吟，一起感受不知道怎麼描述的感覺。我不痛，也不爽，我只是一團肉塊在被迫蠕動。牆壁在滴水，它在哭，我看著它哭，我看它好可憐，想給它擦一擦眼淚。
-                </div>
-                <div class="para">「婊子做愛都不專心，真晦氣，最便宜的婊子果然不是好貨。」</div>
-                <div class="para">
-                    可是男人看不見它在流淚，他緊緊拽著我的頭髮，我吐著舌頭，更大聲的呻吟著，討好著身上的人。正對著房間裡的落地鏡，我看著我的表情，就像乞丐看著路人的表情。可能我的臉上更多了幾分噁心的諂媚。我試圖擠出幾滴眼淚來，讓男人稍微輕一點。可是獵物的求饒只會讓獵人更興奮，槍從我的陰道插入，射穿了我，子彈和血液從嘴巴裡射出，我活生生地裂成了兩半。
-                </div>
-                <div class="para">
-                    男人點了根煙，聞起來就很廉價，也是，有錢人為什麼會來找我這種最底層的雞，我還是很有自知之明的。我以為這場刑罰終於要結束了，可是我總是低估人的殘暴，人總是說野獸殘暴，可是真正的殘暴從來不明目張膽。男人把煙頭滅在我背脊，饜足地把煙頭塞進我的嘴裡逼迫我吞下去。我被摀住了嘴巴，只能發出嗚嗚的求饒聲。結果卻適得其反，一個巴掌狠狠地劈在了我的臉上。我只能強硬吞嚥下去，很乾、很硬、很苦。我嘗試了幾次都無果，最後不上不下地卡在了喉嚨裡。男人適時鬆開了手，末了穿好褲子，掏出三百塊塞進我還沒有完全合攏的肉穴裡。
-                </div>
-                <div class="para">
-                    還沒等我反應過來一切他就走人了，好像什麼都沒有發生過一樣。我趕緊從穴裡掏出那可憐的三百，上面還沾了腥臭的白色精液，混合著我的逼水。我透著光左看看右看看，確認那三張都是真鈔票才放下心來。被內射也只有三百塊，我真的是妓女裡最下賤的那一層。會所裡的小姐動不動就是大老闆幾千幾萬地給。她們至少有個雅名，我只是廉價的雞。
-                </div>
-                <div class="para">
-                    嗓子裡的異物感後知後覺，我跑到廁所裡就開始嘔。馬桶上是陳年擦不掉的黃色尿漬，我嘔得更猛了。最後是連同著中午的飯都吐了出來。酸、辣、臭，我自己形容不了那種味道，如果一定要形容，應該是掉進了泔水桶的感覺，馬上沖掉了那堆嘔吐物。
-                </div>
-                <div class="para">
-                    我後背對著鏡子，用及其彆扭的姿態想看清楚後背上的疤，還沾著煙灰，就那麼燙掉了一塊肉，露出粉嫩嫩，帶著血絲的皮囊下的肉，可愛的。我潦草地消了毒。我知道自己是疤痕體質，怎麼樣處理那個玩意兒也是會留下一輩子的。
-                </div>
-                <div class="para">
-                    其實這已經不是第一次了，我經常被客人要求用舌頭接住煙灰，大多數最後他們會在我身上留下一個疤，就像是在樹邊撒尿標記地盤的狗。可是沒有人願意標記一個下賤的妓女，這只是他們作為上位者的小小惡趣味。我作為奴隸也只能乖乖受著。這是我的營生，我自己心甘情願做的這種買賣，也不想立個牌坊吐露冤屈。我從不委屈，也不感覺很疼。和我住在一個筒子樓裡的樓鳳也這樣。
-                </div>
-                <div class="para">我們不怕疼，我們只怕活不下去，我們怕餓肚子。</div>
-                <div class="para">我數了數身上的疤，可能有遺落，很多地方我自己根本看不到。屁股、後背、胸口。零零散散得有十幾處疤，都是紅紅的，鼓鼓的。都是我的屍斑，是我的死亡證明。</div>
-                <div class="para">我也不知道這樣活著有什麼意思，但是一直就是像賴皮狗一樣地活著，不願意死。也許我其實已經早就死了，不然為什麼我身上密密麻麻爬滿了屍斑。</div>
-                <div class="para">
-                    筒子樓裡的姐妹其實都不大親近我，她們都覺得我是個癲的。我有時候會問她們身上是不是也長了很多屍斑，我們到底是死了還是活著，活著那為什麼會長屍斑，死了又為什麼會餓肚子。她們都覺得我腦子有病，晦氣。連雞都瞧不上我，可能我是真的瘋的。我偶爾聽見她們聚在一起說我會拿刀割自己胳膊，是個精神病。
-                </div>
-                <div class="para">
-                    我看著我的胳膊，爬滿了細長的粉色的肉蟲，和那些屍斑一樣，很可愛。就長在我的身體裡，越來越多，直到它們把我啃食到腐爛。我愛撫著它們，它們都是我的朋友，我可以聽見它們在哭在笑。它們在我身上安了家，我沒有家，但是我樂意給它們一個家，只要它們不嫌棄我是個搖搖欲墜的危房。
-                </div>
-                <div class="para">嘔過之後，我也餓了。正好到了晚上，我要下樓去買飯吃。其實我可以餓著，但我怕那些小傢伙餓著，我不能死，死了它們就沒有家了，太可憐了。</div>
-                <div class="para">
-                    樓下的麵包店的邊角料是我最經常的晚飯，我羨慕櫥窗裡的精緻麵包，可我只能吃得起邊角料，老闆娘看見又是我，不耐煩地把邊角料扔給我，我整整齊齊把三張皺巴巴的一塊錢擺在她面前，拿了邊角料就走，聽見老闆娘嘀嘀咕咕些我聽不懂的方言。那也無所謂了。
-                </div>
-                <div class="para">破敗的屋子裡連窗戶網都是爛的，打開窗戶的一條縫，今天是真的很冷。我嚼著麵包邊，數這個月掙了多少錢，數來數去都是一個數，好無聊。明天也是，往後也是，一樣的日子。</div>
-                <div class="para">
-                    我又開始想自己死沒死，畢竟死人才會像我這樣十年如一日，雷打不動的。可是死人可不會吃東西，也不會想這想那。我也不知道我是活著還是活過。只知道，我的身上爬了越來越多的屍斑和肉蟲。</div>
+            <div class="directory-list">
+                <a href="diary_1.html" class="directory-item" style="font-size: 1rem;">20XX 年 01 月 06 日</a>
+                <a href="diary_2.html" class="directory-item" style="font-size: 1rem;">2023年11月28日 —— 屍斑</a>
             </div>
+            <div class="back-btn-container">
+                <a href="wired.html#skip" class="btn">
+                    << BACK TO WIRED</a>
+            </div>
+        </div>
 
-            <script>
-                // Number of text columns needed is huge so it covers everything safely.
-                // We will generate the needed pages dynamically.
-                const totalColumns = 16;
-                const totalPagesNeeded = Math.ceil(totalColumns / 2) + 1; // +1 for cover
-
-                let currentPage = 1;
-                const totalPagesInBook = totalPagesNeeded;
-
-                const book = document.getElementById('book');
-                const masterContentHtml = document.getElementById('master-content').innerHTML;
-
-                // Build the text pages
-                // Each text page holds 2 columns (front, back).
-                // Since column gap is exact width of the page container, translating by full widths offsets perfectly.
-                let columnIndex = 0;
-
-                for (let i = 2; i <= totalPagesInBook; i++) {
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page';
-                    pageDiv.id = `p${i}`;
-                    pageDiv.style.zIndex = 100 - i + 1; // Correct stacking order right side
-
-                    if (i === totalPagesInBook) {
-                        // Final page with END
-                        pageDiv.innerHTML = `
-                    <div class="front">
-                        <div class="content-area" style="column-width: 100vw; transform: translateX(calc(-100vw * ${columnIndex}));">
-                            ${masterContentHtml}
-                        </div>
-                        <span class="page-num">- ${columnIndex + 2} -</span>
-                    </div>
-                    <div class="back" style="padding: 12vh 12vw; background: rgba(44, 36, 22, 0.9); color: #8c7e6b; text-align: center;">
-                        <h1 style="margin-top: 45%; border: none; letter-spacing: 1rem; opacity: 0.5;">END</h1>
-                    </div>
-                `;
-                    } else {
-                        pageDiv.innerHTML = `
-                    <div class="front">
-                        <div class="content-area" style="column-width: 100vw; transform: translateX(calc(-100vw * ${columnIndex}));">
-                            ${masterContentHtml}
-                        </div>
-                        <span class="page-num">- ${columnIndex + 2} -</span>
-                    </div>
-                    <div class="back">
-                        <div class="content-area" style="column-width: 100vw; transform: translateX(calc(-100vw * ${columnIndex + 1}));">
-                            ${masterContentHtml}
-                        </div>
-                        <span class="page-num">- ${columnIndex + 3} -</span>
-                    </div>
-                `;
-                    }
-
-                    book.appendChild(pageDiv);
-                    columnIndex += 2;
-                }
-
-
-                function turnPage(dir) {
-                    if (dir === 1 && currentPage <= totalPagesInBook) {
-                        // Turn Next
-                        let p = document.getElementById('p' + currentPage);
-                        if (p) {
-                            p.classList.add('flipped');
-                            p.style.zIndex = currentPage; // Left side stacked correctly from bottom up
-                            currentPage++;
-                        }
-                    } else if (dir === -1 && currentPage > 1) {
-                        // Turn Prev
-                        currentPage--;
-                        let p = document.getElementById('p' + currentPage);
-                        if (p) {
-                            p.classList.remove('flipped');
-                            p.style.zIndex = 100 - currentPage + 1; // Restore right side stacking
-                        }
-                    }
-                }
-            </script>
+        <!-- 右側閱讀區 (Index 預設畫面) -->
+        <div class="content-area">
+            <h1 class="story-title" style="color: #6b5c4d;">站街日記</h1>
+            <div class="story-text" style="color: #8c7e6b;">
+                <p style="font-size: 1.8rem; letter-spacing: 0.5rem; margin-top: 2rem;">我叫婷婷。</p>
+                <p>等待載入文本紀錄... <span class="blinking-cursor"></span></p>
+                <p style="margin-top: 3rem; font-family: monospace; opacity: 0.6;">[SYSTEM_MSG] 請從左側目錄選擇要讀取的日記封包。</p>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
