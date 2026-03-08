@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Miraiyahu | 站街日記</title>
+    <style>
+        :root {
+            --x: 50%;
+            --y: 50%;
+            --border-color: #6b5c4d;
+            --text-color: #4a3e31;
+            /* Darker text for paper */
+            --paper-bg: #d1ccb8;
+            /* Worn paper color */
+        }
+
+        body {
+            background-color: #1a1510;
+            color: #d1ccb8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            position: relative;
+            perspective: 1500px;
+            /* For 3D book effect */
+        }
+
+        /* 背景與濾鏡 (延續 WIRED 風格) */
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('wired-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 1;
+            filter: sepia(50%) contrast(120%) brightness(50%);
+            /* 更暗的背景以利閱讀 */
+            pointer-events: none;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-radial-gradient(circle at center, rgba(10, 10, 10, 0.2) 0, transparent 2px);
+            pointer-events: none;
+            filter: contrast(150%) brightness(120%) sepia(30%);
+            opacity: 0.4;
+            z-index: 2;
+        }
+
+        .scanlines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(20, 20, 20, 0.4) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.1), inset 0 0 3px rgba(100, 100, 100, 0.5);
+            border: 2px solid rgba(50, 50, 50, 0.8);
+            box-sizing: border-box;
+        }
+
+        /* 3D Book Layout */
+        .book {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            max-width: 1000px;
+            max-height: 700px;
+            z-index: 10;
+            transform-style: preserve-3d;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            animation: bootUpBook 1s ease-out forwards;
+        }
+
+        @keyframes bootUpBook {
+            0% {
+                opacity: 0;
+                transform: rotateX(10deg) translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: rotateX(0deg) translateY(0);
+            }
+        }
+
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top: 0;
+            background-color: var(--paper-bg);
+            /* Worn paper texture simulation */
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(139, 115, 85, 0.08) 0%, transparent 50%),
+                linear-gradient(to right, rgba(0, 0, 0, 0.1) 0%, transparent 5%);
+            box-shadow: inset 0 0 30px rgba(107, 92, 77, 0.3), 0 5px 15px rgba(0, 0, 0, 0.5);
+            color: var(--text-color);
+            padding: 3rem;
+            box-sizing: border-box;
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            overflow: hidden;
+            border: 1px solid rgba(107, 92, 77, 0.5);
+        }
+
+        .page.left {
+            left: 0;
+            transform-origin: right center;
+            background-image:
+                radial-gradient(circle at 90% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 20% 80%, rgba(139, 115, 85, 0.08) 0%, transparent 50%),
+                linear-gradient(to left, rgba(0, 0, 0, 0.15) 0%, transparent 5%);
+        }
+
+        .page.right {
+            left: 50%;
+            transform-origin: left center;
+        }
+
+        /* Flipped states */
+        .page.right.flipped {
+            transform: rotateY(-180deg);
+            z-index: 5 !important;
+        }
+
+        .page.left.flipped {
+            transform: rotateY(180deg);
+            z-index: 5 !important;
+        }
+
+        /* 讓背面隱藏或顯示背面的視覺 */
+        .page-front,
+        .page-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            padding: 3rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .page-back {
+            transform: rotateY(180deg);
+            background-color: var(--paper-bg);
+            background-image:
+                radial-gradient(circle at 90% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 40%),
+                linear-gradient(to left, rgba(0, 0, 0, 0.1) 0%, transparent 5%);
+        }
+
+        .page.left .page-back {
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(139, 115, 85, 0.05) 0%, transparent 40%),
+                linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, transparent 5%);
+        }
+
+
+        /* Scrollbars for pages */
+        .page-front::-webkit-scrollbar,
+        .page-back::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page-front::-webkit-scrollbar-track,
+        .page-back::-webkit-scrollbar-track {
+            background: rgba(107, 92, 77, 0.1);
+        }
+
+        .page-front::-webkit-scrollbar-thumb,
+        .page-back::-webkit-scrollbar-thumb {
+            background: rgba(107, 92, 77, 0.5);
+        }
+
+
+        /* Page Content Styling */
+        h2.diary-date {
+            font-family: serif;
+            font-size: 1.8rem;
+            border-bottom: 2px solid rgba(107, 92, 77, 0.3);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+            color: #3d3220;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .weather {
+            font-size: 1.2rem;
+            color: #6b5c4d;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .diary-entry {
+            font-size: 1.1rem;
+            line-height: 2;
+            text-align: justify;
+            text-indent: 2em;
+            color: #2c2416;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 1rem;
+            font-size: 0.9rem;
+            color: #8c7e6b;
+        }
+
+        .right .page-number,
+        .right .page-back .page-number {
+            right: 2rem;
+        }
+
+        .left .page-number,
+        .left .page-back .page-number {
+            left: 2rem;
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: -60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            height: 3rem;
+            padding: 0 2rem;
+            background: linear-gradient(135deg, #495945 0%, #2c2416 100%);
+            color: #d1ccb8;
+            border: 2px outset #7a8c73;
+            border-bottom: 2px solid #1a150d;
+            border-right: 2px solid #1a150d;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+            text-decoration: none;
+            transition: all 0.05s ease;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        .btn:active {
+            border: 2px inset #1a150d;
+            border-bottom: 2px solid #7a8c73;
+            border-right: 2px solid #7a8c73;
+            transform: translate(1px, 1px);
+        }
+
+        .btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 100;
+            color: #d1ccb8;
+            text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            transition: all 0.05s;
+        }
+
+        .close-btn:hover {
+            background: rgba(73, 89, 69, 0.8);
+            color: #fff;
+        }
+
+        /* Page click areas for natural flipping */
+        .click-area-left,
+        .click-area-right {
+            position: absolute;
+            top: 0;
+            width: 15%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .click-area-left {
+            left: 0;
+        }
+
+        .click-area-right {
+            right: 0;
+        }
+
+        .click-area-right:hover {
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.05), transparent);
+        }
+
+        .click-area-left:hover {
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.05), transparent);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="noise-overlay"></div>
+    <div class="scanlines"></div>
+    <div class="frame"></div>
+
+    <a href="wired.html#skip" class="close-btn">
+        << 返回 WIRED</a>
+
+            <div class="book" id="diary-book">
+
+                <!-- Cover Page (Left side empty, right side cover) -->
+                <div class="page left" style="z-index: 1; background: #2c2416; border: 2px solid #1a1510;">
+                    <div class="page-front" style="background: #2c2416;"></div>
+                    <div class="page-back"></div>
+                </div>
+
+                <!-- Page 1 (Cover / Intro) -->
+                <div class="page right" id="page-1" style="z-index: 10;">
+                    <!-- Front: Cover -->
+                    <div class="page-front"
+                        style="background: #2c2416; color: #8c7e6b; display:flex; flex-direction:column; justify-content:center; align-items:center; border: 2px solid #1a1510;">
+                        <h1
+                            style="font-family: serif; font-size: 3rem; letter-spacing: 0.5rem; border-bottom: 1px solid #6b5c4d; padding-bottom: 1rem;">
+                            站街日記</h1>
+                        <p style="margin-top: 2rem; font-style: italic; letter-spacing: 0.2rem;">這城市不睡，我也不睡。</p>
+                        <div class="click-area-right" onclick="turnPage(1)"></div>
+                    </div>
+                    <!-- Back: Blank / First Left Page -->
+                    <div class="page-back">
+                        <p style="text-align: center; margin-top: 50%; opacity: 0.5; font-family: serif;">空白</p>
+                        <span class="page-number">- 1 -</span>
+                        <div class="click-area-left" onclick="turnPage(-1)"></div>
+                    </div>
+                </div>
+
+                <!-- Page 2 (Entries 1 & 2) -->
+                <div class="page right" id="page-2" style="z-index: 9;">
+                    <!-- Front -->
+                    <div class="page-front">
+                        <h2 class="diary-date">03.04 <span class="weather">陰，微雨</span></h2>
+                        <div class="diary-entry">
+                            路燈壞了三天，巷口那隻野狗盯著我看了一整晚。牠的眼睛像玻璃珠，映著遠處霓虹燈的紅。
+                        </div>
+                        <div class="diary-entry">
+                            十二點半，停了一輛黑色的轎車。車窗搖下來的時候，我聞到劣質香水混著雨水的酸味。我拉開車門坐進去，沒有問你要去哪裡。這條街上的人，誰都不知道自己要去哪裡。
+                        </div>
+                        <span class="page-number">- 2 -</span>
+                        <div class="click-area-right" onclick="turnPage(1)"></div>
+                    </div>
+                    <!-- Back -->
+                    <div class="page-back">
+                        <h2 class="diary-date">03.05 <span class="weather">悶熱</span></h2>
+                        <div class="diary-entry">
+                            白天睡不著。樓上的水管一直在漏，滴在鐵皮屋頂上，像是有誰在數我的心跳。
+                        </div>
+                        <div class="diary-entry">
+                            今晚街角多了個生面孔，年輕，頭髮染成枯黃色。她點煙的手在抖。我遞給她一個打火機，沒有說話。她吐出一口煙，煙霧在霓虹燈下變成詭異的紫。我知道她撐不過兩個月，這座城市會吃人，連骨頭都不吐。
+                        </div>
+                        <span class="page-number">- 3 -</span>
+                        <div class="click-area-left" onclick="turnPage(-1)"></div>
+                    </div>
+                </div>
+
+                <!-- Page 3 (Entries 3 & End) -->
+                <div class="page right" id="page-3" style="z-index: 8;">
+                    <!-- Front -->
+                    <div class="page-front">
+                        <h2 class="diary-date">03.08 <span class="weather">大霧</span></h2>
+                        <div class="diary-entry">
+                            這場霧來得很奇怪，站在街頭，連對面的招牌都看不清。
+                        </div>
+                        <div class="diary-entry">
+                            我站在便利商店屋簷下躲雨，點燃了今天最後一根煙。看著玻璃窗裡倒影的自己，突然覺得很陌生。那張臉塗著厚厚的粉，口紅紅得像血。原來我已經變成這樣了？
+                        </div>
+                        <div class="diary-entry">
+                            還是沒有等到無妄的等待。明天太陽總會出來的吧。
+                        </div>
+                        <span class="page-number">- 4 -</span>
+                        <div class="click-area-right" onclick="turnPage(1)"></div>
+                    </div>
+                    <!-- Back (Back Cover) -->
+                    <div class="page-back"
+                        style="background: #2c2416; color: #8c7e6b; display:flex; justify-content:center; align-items:center;">
+                        <p style="letter-spacing: 0.5rem; opacity: 0.5; font-family: serif;">END.</p>
+                        <div class="click-area-left" onclick="turnPage(-1)"></div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn disabled" id="prev-btn" onclick="turnPage(-1)">上一頁</button>
+                    <button class="btn" id="next-btn" onclick="turnPage(1)">下一頁</button>
+                </div>
+            </div>
+
+            <script>
+                let currentPage = 1;
+                const totalPages = 3; // Number of turning pages
+
+                function turnPage(direction) {
+                    const prevBtn = document.getElementById('prev-btn');
+                    const nextBtn = document.getElementById('next-btn');
+
+                    if (direction === 1 && currentPage <= totalPages) {
+                        // Turn Next
+                        const pageToFlip = document.getElementById(`page-${currentPage}`);
+                        pageToFlip.classList.add('flipped');
+                        pageToFlip.style.zIndex = totalPages + currentPage; // Ensure it stays on top while flipping left
+                        currentPage++;
+                    } else if (direction === -1 && currentPage > 1) {
+                        // Turn Prev
+                        currentPage--;
+                        const pageToFlip = document.getElementById(`page-${currentPage}`);
+                        pageToFlip.classList.remove('flipped');
+                        pageToFlip.style.zIndex = totalPages - currentPage + 10; // Reset z-index
+                    }
+
+                    // Update buttons
+                    prevBtn.classList.toggle('disabled', currentPage === 1);
+                    nextBtn.classList.toggle('disabled', currentPage > totalPages);
+                }
+            </script>
+</body>
+
+</html>
