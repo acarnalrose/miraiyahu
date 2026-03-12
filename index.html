@@ -409,60 +409,65 @@
             text-shadow: 0 0 3px rgba(209, 204, 184, 0.3);
         }
 
-        /* --- Electronic Butterfly Swarm Styles --- */
-        .butterfly {
+        /* --- 3D Butterfly Easter Egg Styles --- */
+        .butterfly-3d {
             position: fixed;
-            width: 80px;
-            height: 80px;
+            width: 180px;
+            height: 180px;
             z-index: 200;
             pointer-events: none;
+            perspective: 1000px;
             opacity: 0;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.7)) hue-rotate(0deg);
-            transform-origin: center;
+            mix-blend-mode: screen; /* 移除黑色背景，保留發光 */
         }
 
-        @keyframes fly-glitch {
+        .butterfly-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .wing {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background-image: url('butterfly_3d.png');
+            background-size: 200% 100%;
+            transform-origin: var(--origin);
+            animation: flap-3d 0.4s infinite ease-in-out alternate;
+        }
+
+        .wing-l {
+            left: 0;
+            background-position: left;
+            --origin: right center;
+        }
+
+        .wing-r {
+            right: 0;
+            background-position: right;
+            --origin: left center;
+        }
+
+        @keyframes flap-3d {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(80deg); }
+        }
+
+        @keyframes fly-elegant {
             0% {
                 opacity: 0;
-                transform: translate(0, 0) scale(0.3) rotate(0deg);
-                filter: brightness(2) contrast(2) hue-rotate(0deg);
-            }
-            5% {
-                opacity: 0.8;
-                filter: brightness(1.5) contrast(1.5) hue-rotate(90deg);
+                transform: translate(0, 0) scale(0.6) rotateX(20deg) rotateZ(0deg);
             }
             15% {
-                transform: translate(calc(var(--tx) * 0.1), calc(var(--ty) * 0.1)) scale(0.6) rotate(45deg);
-                filter: brightness(1) contrast(1.2) hue-rotate(180deg) skewX(10deg);
-            }
-            90% {
-                opacity: 0.7;
+                opacity: 1;
             }
             100% {
                 opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--tr)) skewX(-10deg);
-                filter: brightness(0.5) contrast(2) hue-rotate(360deg);
+                transform: translate(var(--tx), var(--ty)) scale(1.2) rotateX(var(--rx)) rotateZ(var(--rz));
             }
-        }
-
-        @keyframes glitch-shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-2px) skewY(1deg); }
-            40% { transform: translateX(2px) skewY(-1deg); }
-            60% { transform: translateX(-1px); }
-            80% { transform: translateX(1px); }
-        }
-
-        .butterfly-inner {
-            width: 100%;
-            height: 100%;
-            animation: flap 0.15s infinite ease-in-out, glitch-shake 0.3s infinite;
-            filter: drop-shadow(0 0 5px cyan);
-        }
-
-        @keyframes flap {
-            0%, 100% { transform: scaleX(1); }
-            50% { transform: scaleX(-0.2); } /* Aggressive flapping */
         }
     </style>
     <script>
@@ -590,38 +595,41 @@
                         const centerX = rect.left + rect.width / 2;
                         const centerY = rect.top + rect.height / 2;
                         
-                        // Spawn an Electronic Swarm (20 butterflies)
-                        for (let i = 0; i < 20; i++) {
-                            setTimeout(() => {
-                                spawnButterfly(centerX, centerY);
-                            }, i * 50); // Staggered entry for chaotic feel
-                        }
+                        // Spawn 2 Refined 3D Butterflies
+                        spawn3DButterfly(centerX, centerY);
+                        setTimeout(() => spawn3DButterfly(centerX, centerY), 300);
                     }
                 });
             }
 
-            function spawnButterfly(x, y) {
+            function spawn3DButterfly(x, y) {
                 const b = document.createElement('div');
-                b.className = 'butterfly';
-                b.style.left = (x - 40) + 'px'; // Center 80px width
-                b.style.top = (y - 40) + 'px';  // Center 80px height
+                b.className = 'butterfly-3d';
+                b.style.left = (x - 90) + 'px'; // Center 180px width
+                b.style.top = (y - 90) + 'px';  // Center 180px height
                 
-                // Cinematic randomized trajectories filling the screen
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 800 + Math.random() * 1200;
-                const tx = Math.cos(angle) * distance + 'px';
-                const ty = Math.sin(angle) * distance + 'px';
-                const tr = (Math.random() * 1440 - 720) + 'deg'; // Multi-spin
+                // Elegant randomized trajectories
+                const tx = (Math.random() - 0.5) * 1200 + 'px';
+                const ty = - (600 + Math.random() * 400) + 'px'; // Fly upward
+                const rx = (Math.random() * 40 - 20) + 'deg';
+                const rz = (Math.random() * 360 - 180) + 'deg';
                 
                 b.style.setProperty('--tx', tx);
                 b.style.setProperty('--ty', ty);
-                b.style.setProperty('--tr', tr);
+                b.style.setProperty('--rx', rx);
+                b.style.setProperty('--rz', rz);
                 
-                b.innerHTML = `<img src="butterfly_digital.png" class="butterfly-inner" alt="digital_butterfly">`;
-                b.style.animation = 'fly-glitch 5s cubic-bezier(0.1, 0, 0.3, 1) forwards';
+                b.innerHTML = `
+                    <div class="butterfly-body">
+                        <div class="wing wing-l"></div>
+                        <div class="wing wing-r"></div>
+                    </div>
+                `;
+                
+                b.style.animation = 'fly-elegant 6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
                 
                 document.body.appendChild(b);
-                setTimeout(() => b.remove(), 5000);
+                setTimeout(() => b.remove(), 6000);
             }
         </script>
 </body>
