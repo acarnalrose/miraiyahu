@@ -717,6 +717,7 @@
 
         function toggleArt(show) {
             if (show) {
+                if (typeof bbsScreen !== 'undefined') bbsScreen.style.display = 'none'; // Ensure BBS is closed
                 artScreen.style.display = 'flex';
                 portfolio.style.opacity = '0.3';
                 portfolio.style.pointerEvents = 'none';
@@ -733,14 +734,17 @@
             artFiles.forEach((file, index) => {
                 const item = document.createElement('div');
                 item.className = 'art-item';
-                item.onclick = () => openLightbox(`畫畫/${file}`);
+                const fullPath = `畫畫/${file}`;
+                const encodedPath = encodeURI(fullPath);
+                
+                item.onclick = () => openLightbox(encodedPath);
                 
                 // Construct a "Wired" metadata label
                 const size = Math.floor(Math.random() * 500 + 200) + 'KB';
                 const id = 'ART_' + (index + 1).toString().padStart(3, '0');
                 
                 item.innerHTML = `
-                    <img src="畫畫/${file}" alt="Artwork ${index + 1}">
+                    <img src="${encodedPath}" alt="Artwork ${index + 1}">
                     <div class="art-label">
                         <span>${id}</span>
                         <span>${size} / ENCRYPTED</span>
@@ -769,6 +773,7 @@
 
         async function toggleBBS(show) {
             if (show) {
+                if (typeof artScreen !== 'undefined') artScreen.style.display = 'none'; // Ensure Art is closed
                 bbsScreen.style.display = 'flex';
                 portfolio.style.opacity = '0.3';
                 portfolio.style.pointerEvents = 'none';
