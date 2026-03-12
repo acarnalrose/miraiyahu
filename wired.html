@@ -502,62 +502,72 @@
             left: 5%;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(10, 8, 5, 0.9);
-            border: 1px solid rgba(209, 204, 184, 0.3);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 8, 5, 0.92);
+            border: 1px solid rgba(209, 204, 184, 0.2);
+            backdrop-filter: blur(25px);
             padding: 2rem;
-            animation: terminalBoot 0.4s steps(4) forwards;
+            animation: fadeInPortfolio 0.6s ease forwards;
             overflow: hidden;
         }
 
         .art-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            gap: 2.5rem;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 2rem;
             flex-grow: 1;
-            perspective: 1000px;
+            perspective: 1500px;
         }
 
         .art-item {
             position: relative;
-            background: rgba(30, 25, 20, 0.5);
+            background: rgba(40, 35, 30, 0.3);
             border: 1px solid rgba(209, 204, 184, 0.1);
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
+            opacity: 0;
+            animation: art-fade-in 0.8s ease forwards;
+        }
+
+        @keyframes art-fade-in {
+            from { opacity: 0; transform: translateY(30px) rotateX(-10deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
         }
 
         .art-item:hover {
-            transform: translateZ(30px) rotateX(5deg) scale(1.05);
-            border-color: rgba(209, 204, 184, 0.8);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(209, 204, 184, 0.2);
+            transform: translateZ(50px) translateY(-10px);
+            border-color: rgba(209, 204, 184, 0.5);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9);
+            background: rgba(44, 54, 39, 0.2);
         }
 
         .art-item img {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
-            filter: sepia(30%) contrast(110%);
-            transition: filter 0.3s ease;
+            filter: sepia(40%) contrast(105%) brightness(90%);
+            transition: all 0.6s ease;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .art-item:hover img {
-            filter: sepia(0%) contrast(120%);
+            filter: sepia(0%) contrast(115%) brightness(110%);
         }
 
         .art-label {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: #8c7e6b;
-            font-family: serif;
-            letter-spacing: 1px;
-            border-top: 1px solid rgba(140, 126, 107, 0.3);
-            padding-top: 5px;
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: rgba(209, 204, 184, 0.6);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(140, 126, 107, 0.2);
+            padding-top: 8px;
             display: flex;
             justify-content: space-between;
+            text-transform: uppercase;
         }
 
         /* --- Lightbox Styles --- */
@@ -567,39 +577,47 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(5, 5, 5, 0.98);
             z-index: 500;
             display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            cursor: zoom-out;
         }
 
         .lightbox-img {
-            max-width: 90%;
-            max-height: 80%;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
-            border: 1px solid rgba(209, 204, 184, 0.2);
-            animation: glitch-reveal 0.5s ease;
+            max-width: 85%;
+            max-height: 85%;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 1);
+            border: 1px solid rgba(209, 204, 184, 0.15);
+            animation: blur-focus-reveal 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        @keyframes glitch-reveal {
-            0% { opacity: 0; transform: scale(0.9) skewX(10deg); filter: hue-rotate(90deg); }
-            50% { opacity: 0.5; transform: scale(1.05) skewX(-5deg); filter: hue-rotate(-90deg); }
-            100% { opacity: 1; transform: scale(1) skewX(0); filter: hue-rotate(0); }
+        @keyframes blur-focus-reveal {
+            0% { opacity: 0; filter: blur(20px) brightness(200%); transform: scale(0.95); }
+            100% { opacity: 1; filter: blur(0) brightness(100%); transform: scale(1); }
         }
 
         .lightbox-close {
             position: absolute;
-            top: 2rem;
-            right: 2rem;
-            color: #d1ccb8;
-            font-size: 1.5rem;
+            top: 3rem;
+            right: 3rem;
+            color: rgba(209, 204, 184, 0.5);
+            font-size: 1rem;
+            letter-spacing: 4px;
             cursor: pointer;
-            border: 1px solid #d1ccb8;
-            padding: 5px 15px;
+            border: 1px solid rgba(209, 204, 184, 0.3);
+            padding: 8px 20px;
             background: none;
+            transition: all 0.3s;
+        }
+
+        .lightbox-close:hover {
+            color: #fff;
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .art-grid::-webkit-scrollbar {
@@ -728,17 +746,21 @@
                 item.className = 'art-item';
                 const fullPath = `./art/${file}`;
                 
+                // Elegant staggered entry
+                item.style.animationDelay = `${(index * 0.15)}s`;
+                
                 item.onclick = () => openLightbox(fullPath);
                 
-                // Construct a "Wired" metadata label
                 const size = Math.floor(Math.random() * 500 + 200) + 'KB';
-                const id = 'ART_' + (index + 1).toString().padStart(3, '0');
+                const id = 'ARTIFACT_' + (index + 1).toString().padStart(3, '0');
                 
                 item.innerHTML = `
-                    <img src="${fullPath}" alt="Artwork ${index + 1}">
+                    <div style="transform-style: preserve-3d;">
+                        <img src="${fullPath}" alt="Artwork ${index + 1}">
+                    </div>
                     <div class="art-label">
                         <span>${id}</span>
-                        <span>${size} / ENCRYPTED</span>
+                        <span>FILE_${size} // SYNCED</span>
                     </div>
                 `;
                 artGrid.appendChild(item);
