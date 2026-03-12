@@ -408,6 +408,43 @@
             color: #d1ccb8;
             text-shadow: 0 0 3px rgba(209, 204, 184, 0.3);
         }
+
+        /* --- Butterfly Easter Egg Styles --- */
+        .butterfly {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            z-index: 200;
+            pointer-events: none;
+            opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+            transform-origin: center;
+        }
+
+        @keyframes fly-away {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--tr));
+            }
+        }
+
+        @keyframes flap {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(0.3); }
+        }
+
+        .butterfly-inner {
+            width: 100%;
+            height: 100%;
+            animation: flap 0.2s infinite ease-in-out;
+        }
     </style>
     <script>
         // 獲取鼠標位置並更新 CSS 變量
@@ -519,6 +556,45 @@
                 document.documentElement.style.setProperty('--x', x);
                 document.documentElement.style.setProperty('--y', y);
             });
+            // --- Butterfly Easter Egg Logic ---
+            let butterflyClickCount = 0;
+            const avatar = document.querySelector('.profile-avatar');
+            
+            if (avatar) {
+                avatar.style.cursor = 'pointer'; // Ensure it looks clickable
+                avatar.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    butterflyClickCount++;
+                    if (butterflyClickCount === 3) {
+                        butterflyClickCount = 0;
+                        const rect = avatar.getBoundingClientRect();
+                        spawnButterfly(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                        setTimeout(() => spawnButterfly(rect.left + rect.width / 2, rect.top + rect.height / 2), 200);
+                    }
+                });
+            }
+
+            function spawnButterfly(x, y) {
+                const b = document.createElement('div');
+                b.className = 'butterfly';
+                b.style.left = (x - 30) + 'px';
+                b.style.top = (y - 30) + 'px';
+                
+                // Random flight path
+                const tx = (Math.random() - 0.5) * 1000 + 'px';
+                const ty = (Math.random() - 1.0) * 800 + 'px';
+                const tr = (Math.random() * 720 - 360) + 'deg';
+                
+                b.style.setProperty('--tx', tx);
+                b.style.setProperty('--ty', ty);
+                b.style.setProperty('--tr', tr);
+                
+                b.innerHTML = `<img src="butterfly.png" class="butterfly-inner" alt="butterfly">`;
+                b.style.animation = 'fly-away 4s ease-in forwards';
+                
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 4000);
+            }
         </script>
 </body>
 
