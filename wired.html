@@ -705,15 +705,7 @@
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
 
-        const artFiles = [
-            'photo_2026-03-12 05.24.58.jpeg',
-            'photo_2026-03-12 05.25.02.jpeg',
-            'photo_2026-03-12 05.25.06.jpeg',
-            'photo_2026-03-12 05.25.10.jpeg',
-            'photo_2026-03-12 05.25.14.jpeg',
-            'photo_2026-03-12 05.25.18.jpeg',
-            'photo_2026-03-12 05.25.22.jpeg'
-        ];
+        const artFiles = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'];
 
         function toggleArt(show) {
             if (show) {
@@ -734,17 +726,16 @@
             artFiles.forEach((file, index) => {
                 const item = document.createElement('div');
                 item.className = 'art-item';
-                const fullPath = `./畫畫/${file}`;
-                const encodedPath = encodeURI(fullPath);
+                const fullPath = `./art/${file}`;
                 
-                item.onclick = () => openLightbox(encodedPath);
+                item.onclick = () => openLightbox(fullPath);
                 
                 // Construct a "Wired" metadata label
                 const size = Math.floor(Math.random() * 500 + 200) + 'KB';
                 const id = 'ART_' + (index + 1).toString().padStart(3, '0');
                 
                 item.innerHTML = `
-                    <img src="${encodedPath}" alt="Artwork ${index + 1}">
+                    <img src="${fullPath}" alt="Artwork ${index + 1}">
                     <div class="art-label">
                         <span>${id}</span>
                         <span>${size} / ENCRYPTED</span>
