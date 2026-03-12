@@ -734,7 +734,7 @@
             artFiles.forEach((file, index) => {
                 const item = document.createElement('div');
                 item.className = 'art-item';
-                const fullPath = `畫畫/${file}`;
+                const fullPath = `./畫畫/${file}`;
                 const encodedPath = encodeURI(fullPath);
                 
                 item.onclick = () => openLightbox(encodedPath);
