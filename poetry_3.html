@@ -236,6 +236,17 @@
             text-indent: 0;
         }
 
+
+        /* 分類標籤樣式 / Sidebar Category Label Styles */
+        .sidebar-category {
+            padding: 1.5rem 1.2rem 0.5rem;
+            font-size: 0.75rem;
+            color: #8c7e6b;
+            letter-spacing: 0.1rem;
+            font-family: "Courier New", Courier, monospace;
+            border-bottom: 1px dotted rgba(107, 92, 77, 0.1);
+            text-transform: uppercase;
+        }
         /* 游標微光互動 */
         .cursor-light {
             position: absolute;
@@ -261,7 +272,8 @@
     <div class="workspace">
         <div class="sidebar">
             <div class="sidebar-header">INDEX / 詩歌</div>
-            <div class="directory-list">
+                        <div class="directory-list">
+                <div class="sidebar-category">[ POETRY / 詩歌 ]</div>
                 <a href="poetry_1.html" class="directory-item">COLLECTION_01 聖火燃燒真理</a>
                 <a href="poetry_2.html" class="directory-item">COLLECTION_02 混亂在文字中迷失人生</a>
                 <a href="poetry_3.html" class="directory-item active">COLLECTION_03 無視內心連結</a>
@@ -274,6 +286,7 @@
                 <a href="poetry_10.html" class="directory-item">COLLECTION_10 聲音是雜亂章節</a>
                 <a href="poetry_11.html" class="directory-item">COLLECTION_11 燒燬草坪落滿十字架</a>
                 <a href="poetry_12.html" class="directory-item">COLLECTION_12 泥濘雙眼是愛的牢獄</a>
+                <div class="sidebar-category">[ ESSAYS / 散文隨筆 ]</div>
                 <a href="poetry_13.html" class="directory-item">COLLECTION_13 夢囈</a>
             </div>
             <div class="back-btn-container">
