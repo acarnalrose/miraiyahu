@@ -279,6 +279,149 @@
             top: 0;
             left: 0;
         }
+        /* 留言板 BBS 樣式 */
+        .bbs-screen {
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            width: 80%;
+            height: 70%;
+            max-width: 900px;
+            position: absolute;
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 8, 5, 0.95);
+            border: 2px solid var(--accent, #d1ccb8);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(209, 204, 184, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 2rem;
+            animation: terminalBoot 0.4s steps(4) forwards;
+        }
+
+        @keyframes terminalBoot {
+            0% { opacity: 0; transform: translateY(-50%) scaleY(0.01); }
+            100% { opacity: 1; transform: translateY(-50%) scaleY(1); }
+        }
+
+        .bbs-header {
+            border-bottom: 1px double #d1ccb8;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bbs-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 0.3rem;
+            color: #8c7e6b;
+            text-shadow: 0 0 10px rgba(209, 204, 184, 0.3);
+        }
+
+        .bbs-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid rgba(140, 126, 107, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .message-item {
+            border-left: 3px solid #495945;
+            padding-left: 1rem;
+            animation: textAppear 0.3s ease-out;
+        }
+
+        @keyframes textAppear {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message-meta {
+            font-size: 0.8rem;
+            color: #8c7e6b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #d1ccb8;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .bbs-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .bbs-input {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #6b5c4d;
+            color: #d1ccb8;
+            padding: 0.8rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .bbs-input:focus {
+            outline: none;
+            border-color: #d1ccb8;
+            box-shadow: 0 0 5px rgba(209, 204, 184, 0.5);
+        }
+
+        textarea.bbs-input {
+            width: 100%;
+            height: 100px;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        .anon-label {
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+        }
+
+        .bbs-close {
+            background: none;
+            border: 1px solid #8c7e6b;
+            color: #8c7e6b;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .bbs-close:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        /* 隱藏原生捲軸 */
+        .bbs-messages::-webkit-scrollbar { width: 6px; }
+        .bbs-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0); }
+        .bbs-messages::-webkit-scrollbar-thumb { background: #3a3228; }
+        .bbs-messages::-webkit-scrollbar-thumb:hover { background: #6b5c4d; }
     </style>
 </head>
 
@@ -300,6 +443,29 @@
             <a href="diary.html" class="category-link">站街日記</a>
             <a href="poetry.html" class="category-link">詩歌隨筆</a>
             <a href="#" class="category-link">畫</a>
+            <a href="javascript:void(0)" class="category-link" onclick="toggleBBS(true)">留言板 (BBS)</a>
+        </div>
+    </div>
+
+    <div class="bbs-screen" id="bbs-screen">
+        <div class="bbs-header">
+            <h2>CONNECTED_BBS / 留言板</h2>
+            <button class="bbs-close" onclick="toggleBBS(false)">[ DISCONNECT ]</button>
+        </div>
+        <div class="bbs-messages" id="bbs-messages">
+            <!-- Messages load here -->
+        </div>
+        <div class="bbs-footer">
+            <div class="input-row">
+                <input type="text" id="bbs-name" class="bbs-input" placeholder="匿名者 / NAME..." style="width: 150px;">
+                <label class="anon-label">
+                    <input type="checkbox" id="bbs-anon" onchange="handleAnon(this)"> 匿名
+                </label>
+            </div>
+            <textarea id="bbs-content" class="bbs-input" placeholder="Enter message here..."></textarea>
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="btn" style="min-width: 8rem; height: 2.5rem; font-size: 1rem;" onclick="postMessage()">CONNECT</button>
+            </div>
         </div>
     </div>
 
@@ -315,25 +481,101 @@
             document.documentElement.style.setProperty('--x', x);
             document.documentElement.style.setProperty('--y', y);
         });
-    </script>
 
-    <script>
+        // BBS Logic
+        const bbsScreen = document.getElementById('bbs-screen');
+        const portfolio = document.querySelector('.portfolio-screen');
+        const bbsMessages = document.getElementById('bbs-messages');
+        const bbsNameInput = document.getElementById('bbs-name');
+        const bbsContentInput = document.getElementById('bbs-content');
+        const bbsAnonCheck = document.getElementById('bbs-anon');
+
+        function toggleBBS(show) {
+            if (show) {
+                bbsScreen.style.display = 'flex';
+                portfolio.style.opacity = '0.3';
+                portfolio.style.pointerEvents = 'none';
+                loadMessages();
+            } else {
+                bbsScreen.style.display = 'none';
+                portfolio.style.opacity = '1';
+                portfolio.style.pointerEvents = 'all';
+            }
+        }
+
+        function handleAnon(el) {
+            if (el.checked) {
+                bbsNameInput.value = '';
+                bbsNameInput.disabled = true;
+                bbsNameInput.placeholder = 'ANONYMOUS';
+            } else {
+                bbsNameInput.disabled = false;
+                bbsNameInput.placeholder = '匿名者 / NAME...';
+            }
+        }
+
+        function loadMessages() {
+            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
+            bbsMessages.innerHTML = '';
+            
+            if (messages.length === 0) {
+                bbsMessages.innerHTML = '<div style="color: #495945; font-size: 0.9rem;">[ SYSTEM: NO CONNECTIONS FOUND. BE THE FIRST TO CONNECT. ]</div>';
+                return;
+            }
+
+            messages.forEach(msg => {
+                const item = document.createElement('div');
+                item.className = 'message-item';
+                item.innerHTML = `
+                    <div class="message-meta">
+                        <span># ${msg.name}</span>
+                        <span>@ ${msg.time}</span>
+                    </div>
+                    <div class="message-content">${msg.content}</div>
+                `;
+                bbsMessages.appendChild(item);
+            });
+            bbsMessages.scrollTop = bbsMessages.scrollHeight;
+        }
+
+        function postMessage() {
+            const content = bbsContentInput.value.trim();
+            if (!content) return;
+
+            let name = bbsNameInput.value.trim();
+            if (bbsAnonCheck.checked || !name) {
+                name = 'ANONYMOUS';
+            }
+
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
+            messages.push({
+                name: name,
+                content: content,
+                time: timeStr
+            });
+
+            localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
+            bbsContentInput.value = '';
+            loadMessages();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#skip') {
                 const welcome = document.getElementById('welcome-sequence');
-                const portfolio = document.querySelector('.portfolio-screen');
+                const portfolioScreen = document.querySelector('.portfolio-screen');
                 if (welcome) {
                     welcome.style.animation = 'none';
                     welcome.style.display = 'none';
                 }
-                if (portfolio) {
-                    portfolio.style.animation = 'none';
-                    portfolio.style.opacity = '1';
+                if (portfolioScreen) {
+                    portfolioScreen.style.animation = 'none';
+                    portfolioScreen.style.opacity = '1';
                 }
             }
         });
     </script>
 </body>
-
-
 </html>
