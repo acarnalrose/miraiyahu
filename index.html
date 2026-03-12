@@ -595,9 +595,12 @@
                         const centerX = rect.left + rect.width / 2;
                         const centerY = rect.top + rect.height / 2;
                         
-                        // Spawn 2 Refined 3D Butterflies
-                        spawn3DButterfly(centerX, centerY);
-                        setTimeout(() => spawn3DButterfly(centerX, centerY), 300);
+                        // Spawn 7 Refined 3D Butterflies with staggered entry
+                        for (let i = 0; i < 7; i++) {
+                            setTimeout(() => {
+                                spawn3DButterfly(centerX, centerY);
+                            }, i * 150);
+                        }
                     }
                 });
             }
