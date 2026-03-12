@@ -602,16 +602,17 @@
 
         .lightbox-close {
             position: absolute;
-            top: 3rem;
-            right: 3rem;
+            top: 2rem;
+            right: 2rem;
             color: rgba(209, 204, 184, 0.5);
-            font-size: 1rem;
-            letter-spacing: 4px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
             cursor: pointer;
-            border: 1px solid rgba(209, 204, 184, 0.3);
-            padding: 8px 20px;
-            background: none;
+            border: 1px solid rgba(209, 204, 184, 0.2);
+            padding: 5px 15px;
+            background: rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
+            z-index: 600;
         }
 
         .lightbox-close:hover {
@@ -619,6 +620,35 @@
             border-color: #fff;
             background: rgba(255, 255, 255, 0.1);
         }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(209, 204, 184, 0.2);
+            color: rgba(209, 204, 184, 0.5);
+            font-size: 2rem;
+            padding: 2rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: serif;
+            user-select: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-color: rgba(209, 204, 184, 0.8);
+            box-shadow: 0 0 20px rgba(209, 204, 184, 0.2);
+        }
+
+        .nav-btn.prev { left: 2rem; }
+        .nav-btn.next { right: 2rem; }
 
         .art-grid::-webkit-scrollbar {
             width: 6px;
@@ -682,9 +712,11 @@
         </div>
     </div>
 
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <button class="lightbox-close" onclick="closeLightbox()">[ CLOSE ]</button>
-        <img class="lightbox-img" id="lightbox-img" src="" alt="artwork">
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox(event)">[ DISCONNECT_VIEW ]</button>
+        <div class="nav-btn prev" onclick="navigateArt(event, -1)">‹</div>
+        <div class="nav-btn next" onclick="navigateArt(event, 1)">›</div>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="artwork" onclick="event.stopPropagation()">
     </div>
 
     <div class="buttons" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 60; margin: 0;">
@@ -724,6 +756,7 @@
         const lightboxImg = document.getElementById('lightbox-img');
 
         const artFiles = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'];
+        let currentArtIndex = 0;
 
         function toggleArt(show) {
             if (show) {
@@ -749,7 +782,7 @@
                 // Elegant staggered entry
                 item.style.animationDelay = `${(index * 0.15)}s`;
                 
-                item.onclick = () => openLightbox(fullPath);
+                item.onclick = () => openLightbox(index);
                 
                 const size = Math.floor(Math.random() * 500 + 200) + 'KB';
                 const id = 'ARTIFACT_' + (index + 1).toString().padStart(3, '0');
@@ -767,14 +800,42 @@
             });
         }
 
-        function openLightbox(src) {
+        function openLightbox(index) {
+            currentArtIndex = index;
+            const src = `./art/${artFiles[currentArtIndex]}`;
             lightboxImg.src = src;
             lightbox.style.display = 'flex';
+            // Disable background scroll if needed, though this is absolute on top
         }
 
-        function closeLightbox() {
+        function navigateArt(e, direction) {
+            if (e) e.stopPropagation();
+            currentArtIndex += direction;
+            if (currentArtIndex >= artFiles.length) currentArtIndex = 0;
+            if (currentArtIndex < 0) currentArtIndex = artFiles.length - 1;
+            
+            const src = `./art/${artFiles[currentArtIndex]}`;
+            // Use a slight fade out/in effect for the image transition if desired
+            lightboxImg.style.opacity = '0';
+            setTimeout(() => {
+                lightboxImg.src = src;
+                lightboxImg.style.opacity = '1';
+            }, 100);
+        }
+
+        function closeLightbox(e) {
+            if (e) e.stopPropagation();
             lightbox.style.display = 'none';
         }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'ArrowRight') navigateArt(null, 1);
+                if (e.key === 'ArrowLeft') navigateArt(null, -1);
+                if (e.key === 'Escape') closeLightbox();
+            }
+        });
 
         let userId = localStorage.getItem('wired_user_id');
         if (!userId) {
