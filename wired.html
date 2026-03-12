@@ -557,19 +557,6 @@
             filter: sepia(0%) contrast(115%) brightness(110%);
         }
 
-        .art-label {
-            margin-top: 15px;
-            font-size: 0.75rem;
-            color: rgba(209, 204, 184, 0.6);
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            border-top: 1px solid rgba(140, 126, 107, 0.2);
-            padding-top: 8px;
-            display: flex;
-            justify-content: space-between;
-            text-transform: uppercase;
-        }
-
         /* --- Lightbox Styles --- */
         .lightbox {
             position: fixed;
@@ -790,10 +777,6 @@
                 item.innerHTML = `
                     <div style="transform-style: preserve-3d;">
                         <img src="${fullPath}" alt="Artwork ${index + 1}">
-                    </div>
-                    <div class="art-label">
-                        <span>${id}</span>
-                        <span>FILE_${size} // SYNCED</span>
                     </div>
                 `;
                 artGrid.appendChild(item);
