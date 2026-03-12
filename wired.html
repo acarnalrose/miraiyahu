@@ -719,15 +719,29 @@
             document.documentElement.style.setProperty('--y', y);
         });
 
-        // --- Supabase Configuration ---
-        const SUPABASE_URL = 'https://nrwphcveqpjaxhzlkkbk.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yd3BoY3ZlcXBqYXhoemxra2JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNzAwODUsImV4cCI6MjA4ODg0NjA4NX0.F5-cZwTKixNMz76ecDEhHAy5CRbhSHtGpiChjzeubLY';
+        // --- Supabase Configuration (Obfuscated) ---
+        // Keys are Base64-encoded and decoded at runtime to prevent casual exposure in source view.
+        const _0x7f = atob('aHR0cHM6Ly9ucndwaGN2ZXFwamF4aHpsa2tiay5zdXBhYmFzZS5jbw==');
+        const _0xa3 = atob('ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKemRYQmhZbUZ6WlNJc0luSmxaaUk2SW01eWQzQm9ZM1psY1hCcVlYaG9lbXhyYTJKcklpd2ljbTlzWlNJNkltRnViMjRpTENKcFlYUWlPakUzTnpNeU56QXdPRFVzSW1WNGNDSTZNakE0T0RnME5qQTROWDAuRjUtY1p3VEtpeE5Nejc2ZWNERWhIQXk1Q1JiaFNIdEdwaUNoanpldWJMWQ==');
+
+        // Generate persistent user identity
+        let userId = localStorage.getItem('wired_user_id');
+        if (!userId) {
+            userId = 'usr_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('wired_user_id', userId);
+        }
+
+        const isAdmin = () => localStorage.getItem('wired_admin') === 'true';
 
         let _supabase;
         try {
-            _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            _supabase = supabase.createClient(_0x7f, _0xa3, {
+                global: {
+                    headers: { 'x-sender-id': userId }
+                }
+            });
         } catch (e) {
-            console.error("Supabase config error", e);
+            console.error("[ SYSTEM: CONNECTION PROTOCOL FAILURE ]", e);
         }
 
         const bbsScreen = document.getElementById('bbs-screen');
@@ -820,14 +834,6 @@
             }
         });
 
-        let userId = localStorage.getItem('wired_user_id');
-        if (!userId) {
-            userId = 'usr_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('wired_user_id', userId);
-        }
-
-        const isAdmin = () => localStorage.getItem('wired_admin') === 'true';
-
         async function toggleBBS(show) {
             if (show) {
                 if (typeof artScreen !== 'undefined') artScreen.style.display = 'none'; // Ensure Art is closed
@@ -872,7 +878,7 @@
                         [ CONNECTION ERROR ]<br>
                         CODE: ${error.code}<br>
                         MSG: ${error.message}<br><br>
-                        * 請檢查是否已在 Supabase 創建 'messages' 表，並關閉 RLS 或添加權限項目。
+                        * 請檢查是否已在 Supabase 創建 'messages' 表，並確認 RLS 策略已正確設置。
                     </div>`;
                 return;
             }
