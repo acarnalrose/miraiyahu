@@ -234,11 +234,25 @@
             margin-bottom: 1.5rem;
             text-indent: 2em;
         }
+
+        /* 游標微光互動 */
+        .cursor-light {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(209, 204, 184, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            z-index: 3;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 
 <body>
     <div class="bg-image"></div>
+    <div class="cursor-light"></div>
     <div class="noise-overlay"></div>
     <div class="scanlines"></div>
     <div class="frame"></div>
@@ -284,8 +298,7 @@
                 </p>
                 <p>我後背對著鏡子，用及其彆扭的姿態想看清楚後背上的疤，還沾著煙灰，就那麼燙掉了一塊肉，露出粉嫩嫩，帶著血絲的皮囊下的肉，可愛的。我潦草地消了毒。我知道自己是疤痕體質，怎麼樣處理那個玩意兒也是會留下一輩子的。
                 </p>
-                <p>其實這已經不是第一次了，我經常被客人要求用舌頭接住煙灰，大多數最後他們會在我身上留下一個疤，就像是在樹邊撒
-                    गुप्ता尿標記地盤的狗。可是沒有人願意標記一個下賤的妓女，這只是他們作為上位者的小小惡趣味。我作為奴隸也只能乖乖受著。這是我的營生，我自己心甘情願做的這種買賣，也不想立個牌坊吐露冤屈。我從不委屈，也不感覺很疼。和我住在一個筒子樓裡的樓鳳也這樣。
+                <p>其實這已經不是第一次了，我經常被客人要求用舌頭接住煙灰，大多數最後他們會在我身上留下一個疤，就像是在樹邊撒尿標記地盤的狗。可是沒有人願意標記一個下賤的妓女，這只是他們作為上位者的小小惡趣味。我作為奴隸也只能乖乖受著。這是我的營生，我自己心甘情願做的這種買賣，也不想立個牌坊吐露冤屈。我從不委屈，也不感覺很疼。和我住在一個筒子樓裡的樓鳳也這樣。
                 </p>
                 <p>我們不怕疼，我們只怕活不下去，我們怕餓肚子。</p>
                 <p>我數了數身上的疤，可能有遺落，很多地方我自己根本看不到。屁股、後背、胸口。零零散散得有十幾處疤，都是紅紅的，鼓鼓的。都是我的屍斑，是我的死亡證明。</p>
@@ -305,6 +318,15 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const body = document.body;
+            const x = (e.clientX / body.clientWidth * 100) + '%';
+            const y = (e.clientY / body.clientHeight * 100) + '%';
+            document.documentElement.style.setProperty('--x', x);
+            document.documentElement.style.setProperty('--y', y);
+        });
+    </script>
 </body>
 
 </html>

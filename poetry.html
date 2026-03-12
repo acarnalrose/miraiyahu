@@ -210,11 +210,25 @@
             transform: translate(1px, 1px);
             border-style: inset;
         }
+
+        /* 游標微光互動 */
+        .cursor-light {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(209, 204, 184, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            z-index: 3;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 
 <body>
     <div class="bg-image"></div>
+    <div class="cursor-light"></div>
     <div class="noise-overlay"></div>
     <div class="scanlines"></div>
     <div class="frame"></div>
@@ -227,48 +241,58 @@
         </div>
 
         <div class="poem-grid">
-            <a href="poetry_1.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_01</span>
                 <span class="poem-title">聖火燃燒真理</span>
             </a>
-            <a href="poetry_2.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_02</span>
                 <span class="poem-title">混亂在文字中迷失人生</span>
             </a>
-            <a href="poetry_3.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_03</span>
                 <span class="poem-title">無視內心連結</span>
             </a>
-            <a href="poetry_4.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_04</span>
                 <span class="poem-title">昨夜與流逝的悲哀之歌</span>
             </a>
-            <a href="poetry_5.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_05</span>
                 <span class="poem-title">熟絡滋養傲慢</span>
             </a>
-            <a href="poetry_6.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_06</span>
                 <span class="poem-title">青草地</span>
             </a>
-            <a href="poetry_7.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_07</span>
                 <span class="poem-title">傷口感染膿液滲出</span>
             </a>
-            <a href="poetry_8.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_08</span>
                 <span class="poem-title">聲音是雜亂章節</span>
             </a>
-            <a href="poetry_9.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_09</span>
                 <span class="poem-title">燒燬草坪落滿十字架</span>
             </a>
-            <a href="poetry_10.html" class="poem-card">
+            <a href="#" class="poem-card">
                 <span class="poem-num">COLLECTION_10</span>
                 <span class="poem-title">泥濘雙眼是愛的牢獄</span>
             </a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const body = document.body;
+            const x = (e.clientX / body.clientWidth * 100) + '%';
+            const y = (e.clientY / body.clientHeight * 100) + '%';
+            document.documentElement.style.setProperty('--x', x);
+            document.documentElement.style.setProperty('--y', y);
+        });
+    </script>
 </body>
 
 </html>

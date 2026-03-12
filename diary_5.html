@@ -234,11 +234,25 @@
             margin-bottom: 1.5rem;
             text-indent: 2em;
         }
+
+        /* 游標微光互動 */
+        .cursor-light {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(209, 204, 184, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            z-index: 3;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 
 <body>
     <div class="bg-image"></div>
+    <div class="cursor-light"></div>
     <div class="noise-overlay"></div>
     <div class="scanlines"></div>
     <div class="frame"></div>
@@ -333,6 +347,15 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const body = document.body;
+            const x = (e.clientX / body.clientWidth * 100) + '%';
+            const y = (e.clientY / body.clientHeight * 100) + '%';
+            document.documentElement.style.setProperty('--x', x);
+            document.documentElement.style.setProperty('--y', y);
+        });
+    </script>
 </body>
 
 </html>
