@@ -608,10 +608,14 @@
                 b.style.left = (x - 125) + 'px'; // Center 250px width
                 b.style.top = (y - 125) + 'px';  // Center 250px height
                 
-                // Panoramic randomized trajectories covering more screen
-                const tx = (Math.random() - 0.5) * 1800 + 'px';
-                const ty = - (800 + Math.random() * 600) + 'px'; // Fly higher/further
-                const rx = (Math.random() * 60 - 30) + 'deg';
+                // --- True Omnidirectional 360° Trajectory ---
+                const angle = Math.random() * Math.PI * 2; // Full circle
+                const distance = 1000 + Math.random() * 1000; // Extensive range
+                const tx = Math.cos(angle) * distance + 'px';
+                const ty = Math.sin(angle) * distance + 'px';
+                
+                // Randomized 3D rotations for "nimble" feel
+                const rx = (Math.random() * 80 - 40) + 'deg';
                 const rz = (Math.random() * 720 - 360) + 'deg';
                 
                 b.style.setProperty('--tx', tx);
@@ -626,7 +630,7 @@
                     </div>
                 `;
                 
-                b.style.animation = 'fly-elegant 12s cubic-bezier(0.2, 0, 0.4, 1) forwards';
+                b.style.animation = 'fly-elegant 12s cubic-bezier(0.15, 0, 0.35, 1) forwards';
                 
                 document.body.appendChild(b);
                 setTimeout(() => b.remove(), 12000);
