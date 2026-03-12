@@ -1,0 +1,7 @@
+# Source text files (keep locally, don't expose in repo)
+poems_utf8.txt
+血色堂屋.txt
+血色堂屋_utf8.txt
+
+# System files
+.DS_Store
