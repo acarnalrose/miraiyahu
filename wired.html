@@ -306,21 +306,34 @@
 
         .msg-dot {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 8px;
-            height: 8px;
-            background: #495945;
+            top: 8px;
+            right: 8px;
+            width: 12px;
+            height: 12px;
+            background: #d1ccb8;
+            border: 1px solid #495945;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 10px rgba(209, 204, 184, 0.5);
+            z-index: 5;
+            animation: pulse-dot 2s infinite alternate;
         }
 
-        .msg-dot:hover { transform: scale(1.5); background: #d1ccb8; }
+        @keyframes pulse-dot {
+            0% { box-shadow: 0 0 5px rgba(209, 204, 184, 0.4); filter: brightness(1); }
+            100% { box-shadow: 0 0 15px rgba(209, 204, 184, 1); filter: brightness(1.2); }
+        }
+
+        .msg-dot:hover {
+            transform: scale(1.4);
+            background: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
 
         .msg-controls {
             position: absolute;
-            top: 20px;
+            top: 25px;
             right: 0;
             background: rgba(26, 21, 16, 0.95);
             border: 1px solid #d1ccb8;
@@ -425,6 +438,7 @@
         <a href="index.html" class="btn">返回現實世界</a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         document.addEventListener('mousemove', (e) => {
             const x = (e.clientX / window.innerWidth * 100) + '%';
@@ -432,6 +446,17 @@
             document.documentElement.style.setProperty('--x', x);
             document.documentElement.style.setProperty('--y', y);
         });
+
+        // --- Supabase Configuration ---
+        const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        let _supabase;
+        try {
+            _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch(e) {
+            console.error("Supabase config error", e);
+        }
 
         const bbsScreen = document.getElementById('bbs-screen');
         const portfolio = document.querySelector('.portfolio-screen');
@@ -448,12 +473,13 @@
 
         const isAdmin = () => localStorage.getItem('wired_admin') === 'true';
 
-        function toggleBBS(show) {
+        async function toggleBBS(show) {
             if (show) {
                 bbsScreen.style.display = 'flex';
                 portfolio.style.opacity = '0.3';
                 portfolio.style.pointerEvents = 'none';
-                loadMessages();
+                await loadMessages();
+                setupRealtime();
             } else {
                 bbsScreen.style.display = 'none';
                 portfolio.style.opacity = '1';
@@ -472,15 +498,26 @@
             }
         }
 
-        function loadMessages() {
-            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
+        async function loadMessages() {
+            if (!_supabase) return;
+            const { data: messages, error } = await _supabase
+                .from('messages')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            if (error) {
+                bbsMessages.innerHTML = `<div style="color: #ff4d4d; font-size: 0.8rem; padding: 1rem;">[ CONNECTION ERROR: CHECK BROWSER CONSOLE ]</div>`;
+                return;
+            }
+
             bbsMessages.innerHTML = '';
-            if (messages.length === 0) {
+            if (!messages || messages.length === 0) {
                 bbsMessages.innerHTML = '<div style="color: #495945; font-size: 0.9rem; padding: 1rem;">[ SYSTEM: NO CONNECTIONS FOUND. ]</div>';
                 return;
             }
-            messages.forEach((msg, index) => {
-                const isAuthor = msg.senderId === userId || isAdmin();
+
+            messages.forEach((msg) => {
+                const isAuthor = msg.sender_id === userId || isAdmin();
                 const item = document.createElement('div');
                 item.className = 'message-item';
                 let controlsHtml = '';
@@ -488,19 +525,32 @@
                     controlsHtml = `
                         <div class="msg-dot" onclick="toggleControls(event, this)"></div>
                         <div class="msg-controls">
-                            <button class="ctrl-btn" onclick="startEdit(${index})">[ EDIT ]</button>
-                            <button class="ctrl-btn" onclick="deleteMessage(${index})">[ DELETE ]</button>
+                            <button class="ctrl-btn" onclick="startEdit('${msg.id}')">[ EDIT ]</button>
+                            <button class="ctrl-btn" onclick="deleteMessage('${msg.id}')">[ DELETE ]</button>
                         </div>
                     `;
                 }
+                const d = new Date(msg.created_at);
+                const timeStr = `${d.getFullYear()}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+
                 item.innerHTML = `
                     ${controlsHtml}
-                    <div class="message-meta"><span># ${msg.name}</span><span>@ ${msg.time}</span></div>
-                    <div class="message-content" id="msg-content-${index}">${msg.content}</div>
+                    <div class="message-meta"><span># ${msg.name}</span><span>@ ${timeStr}${msg.is_edited ? ' (EDITED)' : ''}</span></div>
+                    <div class="message-content" id="msg-content-${msg.id}">${msg.content}</div>
                 `;
                 bbsMessages.appendChild(item);
             });
             bbsMessages.scrollTop = bbsMessages.scrollHeight;
+        }
+
+        let channel;
+        function setupRealtime() {
+            if (channel || !_supabase) return;
+            channel = _supabase.channel('public:messages')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, () => {
+                    loadMessages();
+                })
+                .subscribe();
         }
 
         function toggleControls(e, dot) {
@@ -514,48 +564,44 @@
             document.querySelectorAll('.msg-controls').forEach(c => c.style.display = 'none');
         });
 
-        function postMessage() {
+        async function postMessage() {
+            if (!_supabase) return;
             const content = bbsContentInput.value.trim();
             if (!content) return;
             let name = bbsNameInput.value.trim();
             if (bbsAnonCheck.checked || !name) name = 'ANONYMOUS';
-            const now = new Date();
-            const timeStr = `${now.getFullYear()}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
-            messages.push({ senderId: userId, name: name, content: content, time: timeStr });
-            localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
-            bbsContentInput.value = '';
-            loadMessages();
+
+            const { error } = await _supabase
+                .from('messages')
+                .insert([{ sender_id: userId, name: name, content: content }]);
+
+            if (error) alert('[ ERROR: FAILED TO CONNECT ]');
+            else bbsContentInput.value = '';
         }
 
-        function deleteMessage(index) {
-            if (!confirm('[ WARNING: TERMINATE CONNECTION? ]')) return;
-            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
-            messages.splice(index, 1);
-            localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
-            loadMessages();
+        async function deleteMessage(id) {
+            if (!confirm('[ WARNING: TERMINATE CONNECTION? ]') || !_supabase) return;
+            await _supabase.from('messages').delete().eq('id', id);
         }
 
-        function startEdit(index) {
-            const container = document.getElementById(`msg-content-${index}`);
+        async function startEdit(id) {
+            const container = document.getElementById(`msg-content-${id}`);
             const originalContent = container.innerText;
             container.innerHTML = `
-                <textarea class="edit-area" id="edit-box-${index}">${originalContent}</textarea>
+                <textarea class="edit-area" id="edit-box-${id}">${originalContent}</textarea>
                 <div style="display:flex; gap:0.5rem; margin-top:0.5rem; justify-content: flex-end;">
-                    <button class="ctrl-btn" onclick="saveEdit(${index})">[ SAVE ]</button>
+                    <button class="ctrl-btn" onclick="saveEdit('${id}')">[ SAVE ]</button>
                     <button class="ctrl-btn" onclick="loadMessages()">[ CANCEL ]</button>
                 </div>
             `;
         }
 
-        function saveEdit(index) {
-            const newContent = document.getElementById(`edit-box-${index}`).value.trim();
+        async function saveEdit(id) {
+            if (!_supabase) return;
+            const newContent = document.getElementById(`edit-box-${id}`).value.trim();
             if (!newContent) return;
-            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
-            messages[index].content = newContent;
-            messages[index].time += ' (EDITED)';
-            localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
-            loadMessages();
+            await _supabase.from('messages').update({ content: newContent, is_edited: true }).eq('id', id);
+            await loadMessages();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
