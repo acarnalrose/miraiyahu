@@ -687,8 +687,12 @@
                 .from('messages')
                 .insert([{ sender_id: userId, name: name, content: content }]);
 
-            if (error) alert('[ ERROR: FAILED TO CONNECT ]');
-            else bbsContentInput.value = '';
+            if (error) {
+                alert('[ ERROR: FAILED TO CONNECT ]');
+            } else {
+                bbsContentInput.value = '';
+                await loadMessages(); // 立即本地重新整理，提升自己發送時的體驗
+            }
         }
 
         async function deleteMessage(id) {
