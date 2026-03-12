@@ -489,6 +489,125 @@
         .bbs-messages::-webkit-scrollbar-thumb {
             background: #3a3228;
         }
+
+        /* --- Art Gallery Styles --- */
+        .art-screen {
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            width: 90%;
+            height: 85%;
+            max-width: 1200px;
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 8, 5, 0.9);
+            border: 1px solid rgba(209, 204, 184, 0.3);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            animation: terminalBoot 0.4s steps(4) forwards;
+            overflow: hidden;
+        }
+
+        .art-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            overflow-y: auto;
+            padding: 1rem;
+            flex-grow: 1;
+            perspective: 1000px;
+        }
+
+        .art-item {
+            position: relative;
+            background: rgba(30, 25, 20, 0.5);
+            border: 1px solid rgba(209, 204, 184, 0.1);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .art-item:hover {
+            transform: translateZ(30px) rotateX(5deg) scale(1.05);
+            border-color: rgba(209, 204, 184, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(209, 204, 184, 0.2);
+        }
+
+        .art-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            filter: sepia(30%) contrast(110%);
+            transition: filter 0.3s ease;
+        }
+
+        .art-item:hover img {
+            filter: sepia(0%) contrast(120%);
+        }
+
+        .art-label {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #8c7e6b;
+            font-family: serif;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(140, 126, 107, 0.3);
+            padding-top: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- Lightbox Styles --- */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 500;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 80%;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+            border: 1px solid rgba(209, 204, 184, 0.2);
+            animation: glitch-reveal 0.5s ease;
+        }
+
+        @keyframes glitch-reveal {
+            0% { opacity: 0; transform: scale(0.9) skewX(10deg); filter: hue-rotate(90deg); }
+            50% { opacity: 0.5; transform: scale(1.05) skewX(-5deg); filter: hue-rotate(-90deg); }
+            100% { opacity: 1; transform: scale(1) skewX(0); filter: hue-rotate(0); }
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: #d1ccb8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: 1px solid #d1ccb8;
+            padding: 5px 15px;
+            background: none;
+        }
+
+        .art-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .art-grid::-webkit-scrollbar-thumb {
+            background: #3a3228;
+        }
     </style>
 </head>
 
@@ -509,7 +628,7 @@
             <a href="fiction.html" class="category-link">小說</a>
             <a href="diary.html" class="category-link">站街日記</a>
             <a href="poetry.html" class="category-link">詩歌隨筆</a>
-            <a href="#" class="category-link">畫</a>
+            <a href="javascript:void(0)" class="category-link" onclick="toggleArt(true)">畫</a>
             <a href="javascript:void(0)" class="category-link" onclick="toggleBBS(true)">留言板 (BBS)</a>
         </div>
     </div>
@@ -533,6 +652,21 @@
                     onclick="postMessage()">CONNECT</button>
             </div>
         </div>
+    </div>
+
+    <div class="art-screen" id="art-screen">
+        <div class="bbs-header">
+            <h2>ARTIFACT_GALLERY / 畫</h2>
+            <button class="bbs-close" onclick="toggleArt(false)">[ TERMINATE_GALLERY ]</button>
+        </div>
+        <div class="art-grid" id="art-grid">
+            <!-- Images will be populated here by JS -->
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">[ CLOSE ]</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="artwork">
     </div>
 
     <div class="buttons" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 60; margin: 0;">
@@ -565,6 +699,65 @@
         const bbsNameInput = document.getElementById('bbs-name');
         const bbsContentInput = document.getElementById('bbs-content');
         const bbsAnonCheck = document.getElementById('bbs-anon');
+
+        const artScreen = document.getElementById('art-screen');
+        const artGrid = document.getElementById('art-grid');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        const artFiles = [
+            'photo_2026-03-12 05.24.58.jpeg',
+            'photo_2026-03-12 05.25.02.jpeg',
+            'photo_2026-03-12 05.25.06.jpeg',
+            'photo_2026-03-12 05.25.10.jpeg',
+            'photo_2026-03-12 05.25.14.jpeg',
+            'photo_2026-03-12 05.25.18.jpeg',
+            'photo_2026-03-12 05.25.22.jpeg'
+        ];
+
+        function toggleArt(show) {
+            if (show) {
+                artScreen.style.display = 'flex';
+                portfolio.style.opacity = '0.3';
+                portfolio.style.pointerEvents = 'none';
+                loadGallery();
+            } else {
+                artScreen.style.display = 'none';
+                portfolio.style.opacity = '1';
+                portfolio.style.pointerEvents = 'all';
+            }
+        }
+
+        function loadGallery() {
+            artGrid.innerHTML = '';
+            artFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'art-item';
+                item.onclick = () => openLightbox(`畫畫/${file}`);
+                
+                // Construct a "Wired" metadata label
+                const size = Math.floor(Math.random() * 500 + 200) + 'KB';
+                const id = 'ART_' + (index + 1).toString().padStart(3, '0');
+                
+                item.innerHTML = `
+                    <img src="畫畫/${file}" alt="Artwork ${index + 1}">
+                    <div class="art-label">
+                        <span>${id}</span>
+                        <span>${size} / ENCRYPTED</span>
+                    </div>
+                `;
+                artGrid.appendChild(item);
+            });
+        }
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+        }
 
         let userId = localStorage.getItem('wired_user_id');
         if (!userId) {
