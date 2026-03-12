@@ -11,7 +11,6 @@
         }
 
         body {
-            /* 廢土土色與乾草色基底 */
             background-color: #1a1510;
             color: #d1ccb8;
             display: flex;
@@ -24,7 +23,6 @@
             position: relative;
         }
 
-        /* 背景圖 */
         .bg-image {
             position: absolute;
             top: 0;
@@ -36,12 +34,10 @@
             background-position: center;
             opacity: 0.6;
             z-index: 1;
-            /* 加上 Sepia 和高對比度來增強電線桿的鐵鏽感 */
             filter: sepia(50%) contrast(120%) brightness(80%);
             pointer-events: none;
         }
 
-        /* 噪點背景濾鏡，增強迷幻感 */
         .noise-overlay {
             position: absolute;
             width: 100%;
@@ -55,18 +51,10 @@
         }
 
         @keyframes pulse-noise {
-            0% {
-                filter: contrast(150%) brightness(120%) sepia(30%) hue-rotate(0deg);
-                opacity: 0.3;
-            }
-
-            100% {
-                filter: contrast(220%) brightness(150%) sepia(80%) hue-rotate(20deg);
-                opacity: 0.6;
-            }
+            0% { filter: contrast(150%) brightness(120%) sepia(30%) hue-rotate(0deg); opacity: 0.3; }
+            100% { filter: contrast(220%) brightness(150%) sepia(80%) hue-rotate(20deg); opacity: 0.6; }
         }
 
-        /* 掃描線效果 (Scanlines) */
         .scanlines {
             position: absolute;
             width: 100%;
@@ -77,7 +65,6 @@
             z-index: 5;
         }
 
-        /* 全螢幕科技感邊框 (CRT Bezel & Vignette) */
         .frame {
             position: absolute;
             top: 0;
@@ -93,7 +80,6 @@
             box-sizing: border-box;
         }
 
-        /* 歡迎畫面序列 */
         #welcome-sequence {
             position: absolute;
             z-index: 50;
@@ -125,20 +111,10 @@
         }
 
         @keyframes fadeOutSequence {
-
-            0%,
-            50% {
-                opacity: 1;
-                visibility: visible;
-            }
-
-            100% {
-                opacity: 0;
-                visibility: hidden;
-            }
+            0%, 50% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; }
         }
 
-        /* 最終停留的作品分類畫面 */
         .portfolio-screen {
             z-index: 10;
             display: flex;
@@ -151,33 +127,21 @@
             left: 10%;
             top: 50%;
             transform: translateY(-50%) !important;
-            /* Overridden by animation later but starting point is good */
             opacity: 0;
             animation: fadeInPortfolio 1s ease forwards;
             animation-delay: 2.5s;
-            /* Wait for welcome to fade */
         }
 
         @keyframes fadeInPortfolio {
-            0% {
-                opacity: 0;
-                transform: translateY(-40%);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(-50%);
-            }
+            0% { opacity: 0; transform: translateY(-40%); }
+            100% { opacity: 1; transform: translateY(-50%); }
         }
 
-        /* 作品分類網格 */
         .portfolio-grid {
             display: grid;
             grid-template-columns: 1fr;
-            /* 單列豎排 */
             gap: 1.5rem;
             width: 300px;
-            /* 固定一個適合的寬度 */
             margin-bottom: 3rem;
         }
 
@@ -194,12 +158,10 @@
             position: relative;
             overflow: hidden;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
             justify-content: flex-start;
-            /* 讓文字靠左對齊，更有目錄感 */
+            align-items: center;
             padding-left: 2rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .category-link::before {
@@ -216,7 +178,6 @@
 
         .category-link:hover {
             background: rgba(44, 54, 39, 0.4);
-            /* 微微透出廢土綠 */
             border-color: #6b5c4d;
             color: #ffffff;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
@@ -224,9 +185,7 @@
             box-shadow: 0 0 15px rgba(209, 204, 184, 0.2);
         }
 
-        .category-link:hover::before {
-            left: 150%;
-        }
+        .category-link:hover::before { left: 150%; }
 
         .btn {
             display: inline-flex;
@@ -267,7 +226,6 @@
             transform: translate(1px, 1px);
         }
 
-        /* 游標微光互動 */
         .cursor-light {
             position: absolute;
             width: 40vw;
@@ -279,9 +237,10 @@
             top: 0;
             left: 0;
         }
+
         /* 留言板 BBS 樣式 */
         .bbs-screen {
-            z-index: 10;
+            z-index: 100;
             display: none;
             flex-direction: column;
             width: 80%;
@@ -292,7 +251,7 @@
             top: 50%;
             transform: translateY(-50%);
             background: rgba(10, 8, 5, 0.95);
-            border: 2px solid var(--accent, #d1ccb8);
+            border: 2px solid #d1ccb8;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(209, 204, 184, 0.1);
             backdrop-filter: blur(15px);
             padding: 2rem;
@@ -337,6 +296,7 @@
             border-left: 3px solid #495945;
             padding-left: 1rem;
             animation: textAppear 0.3s ease-out;
+            position: relative;
         }
 
         @keyframes textAppear {
@@ -344,34 +304,62 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        .message-meta {
-            font-size: 0.8rem;
-            color: #8c7e6b;
-            margin-bottom: 0.5rem;
-            display: flex;
-            gap: 1rem;
+        .msg-dot {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            background: #495945;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .message-content {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #d1ccb8;
-            word-break: break-all;
-            white-space: pre-wrap;
-        }
+        .msg-dot:hover { transform: scale(1.5); background: #d1ccb8; }
 
-        .bbs-footer {
-            display: flex;
+        .msg-controls {
+            position: absolute;
+            top: 20px;
+            right: 0;
+            background: rgba(26, 21, 16, 0.95);
+            border: 1px solid #d1ccb8;
+            padding: 0.5rem;
+            display: none;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.5rem;
+            z-index: 110;
         }
 
-        .input-row {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #8c7e6b;
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-align: left;
+            padding: 0.2rem 0.5rem;
         }
 
+        .ctrl-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+
+        .message-meta { font-size: 0.8rem; color: #8c7e6b; margin-bottom: 0.5rem; display: flex; gap: 1rem; }
+        .message-content { font-size: 1rem; line-height: 1.6; color: #d1ccb8; word-break: break-all; white-space: pre-wrap; }
+
+        .edit-area {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #d1ccb8;
+            color: #d1ccb8;
+            font-family: inherit;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        .bbs-footer { display: flex; flex-direction: column; gap: 1rem; }
+        .input-row { display: flex; gap: 1rem; align-items: center; }
         .bbs-input {
             background: rgba(0,0,0,0.5);
             border: 1px solid #6b5c4d;
@@ -380,48 +368,14 @@
             font-family: inherit;
             font-size: 0.9rem;
         }
+        .bbs-input:focus { outline: none; border-color: #d1ccb8; }
+        textarea.bbs-input { width: 100%; height: 80px; resize: none; box-sizing: border-box; }
 
-        .bbs-input:focus {
-            outline: none;
-            border-color: #d1ccb8;
-            box-shadow: 0 0 5px rgba(209, 204, 184, 0.5);
-        }
+        .anon-label { font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+        .bbs-close { background: none; border: 1px solid #8c7e6b; color: #8c7e6b; cursor: pointer; padding: 0.2rem 0.5rem; }
 
-        textarea.bbs-input {
-            width: 100%;
-            height: 100px;
-            resize: none;
-            box-sizing: border-box;
-        }
-
-        .anon-label {
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            user-select: none;
-        }
-
-        .bbs-close {
-            background: none;
-            border: 1px solid #8c7e6b;
-            color: #8c7e6b;
-            cursor: pointer;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.8rem;
-        }
-
-        .bbs-close:hover {
-            color: #fff;
-            border-color: #fff;
-        }
-
-        /* 隱藏原生捲軸 */
         .bbs-messages::-webkit-scrollbar { width: 6px; }
-        .bbs-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0); }
         .bbs-messages::-webkit-scrollbar-thumb { background: #3a3228; }
-        .bbs-messages::-webkit-scrollbar-thumb:hover { background: #6b5c4d; }
     </style>
 </head>
 
@@ -452,12 +406,10 @@
             <h2>CONNECTED_BBS / 留言板</h2>
             <button class="bbs-close" onclick="toggleBBS(false)">[ DISCONNECT ]</button>
         </div>
-        <div class="bbs-messages" id="bbs-messages">
-            <!-- Messages load here -->
-        </div>
+        <div class="bbs-messages" id="bbs-messages"></div>
         <div class="bbs-footer">
             <div class="input-row">
-                <input type="text" id="bbs-name" class="bbs-input" placeholder="匿名者 / NAME..." style="width: 150px;">
+                <input type="text" id="bbs-name" class="bbs-input" placeholder="NAME..." style="width: 150px;">
                 <label class="anon-label">
                     <input type="checkbox" id="bbs-anon" onchange="handleAnon(this)"> 匿名
                 </label>
@@ -475,20 +427,26 @@
 
     <script>
         document.addEventListener('mousemove', (e) => {
-            const body = document.body;
-            const x = (e.clientX / body.clientWidth * 100) + '%';
-            const y = (e.clientY / body.clientHeight * 100) + '%';
+            const x = (e.clientX / window.innerWidth * 100) + '%';
+            const y = (e.clientY / window.innerHeight * 100) + '%';
             document.documentElement.style.setProperty('--x', x);
             document.documentElement.style.setProperty('--y', y);
         });
 
-        // BBS Logic
         const bbsScreen = document.getElementById('bbs-screen');
         const portfolio = document.querySelector('.portfolio-screen');
         const bbsMessages = document.getElementById('bbs-messages');
         const bbsNameInput = document.getElementById('bbs-name');
         const bbsContentInput = document.getElementById('bbs-content');
         const bbsAnonCheck = document.getElementById('bbs-anon');
+
+        let userId = localStorage.getItem('wired_user_id');
+        if (!userId) {
+            userId = 'usr_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('wired_user_id', userId);
+        }
+
+        const isAdmin = () => localStorage.getItem('wired_admin') === 'true';
 
         function toggleBBS(show) {
             if (show) {
@@ -510,55 +468,93 @@
                 bbsNameInput.placeholder = 'ANONYMOUS';
             } else {
                 bbsNameInput.disabled = false;
-                bbsNameInput.placeholder = '匿名者 / NAME...';
+                bbsNameInput.placeholder = 'NAME...';
             }
         }
 
         function loadMessages() {
             const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
             bbsMessages.innerHTML = '';
-            
             if (messages.length === 0) {
-                bbsMessages.innerHTML = '<div style="color: #495945; font-size: 0.9rem;">[ SYSTEM: NO CONNECTIONS FOUND. BE THE FIRST TO CONNECT. ]</div>';
+                bbsMessages.innerHTML = '<div style="color: #495945; font-size: 0.9rem; padding: 1rem;">[ SYSTEM: NO CONNECTIONS FOUND. ]</div>';
                 return;
             }
-
-            messages.forEach(msg => {
+            messages.forEach((msg, index) => {
+                const isAuthor = msg.senderId === userId || isAdmin();
                 const item = document.createElement('div');
                 item.className = 'message-item';
+                let controlsHtml = '';
+                if (isAuthor) {
+                    controlsHtml = `
+                        <div class="msg-dot" onclick="toggleControls(event, this)"></div>
+                        <div class="msg-controls">
+                            <button class="ctrl-btn" onclick="startEdit(${index})">[ EDIT ]</button>
+                            <button class="ctrl-btn" onclick="deleteMessage(${index})">[ DELETE ]</button>
+                        </div>
+                    `;
+                }
                 item.innerHTML = `
-                    <div class="message-meta">
-                        <span># ${msg.name}</span>
-                        <span>@ ${msg.time}</span>
-                    </div>
-                    <div class="message-content">${msg.content}</div>
+                    ${controlsHtml}
+                    <div class="message-meta"><span># ${msg.name}</span><span>@ ${msg.time}</span></div>
+                    <div class="message-content" id="msg-content-${index}">${msg.content}</div>
                 `;
                 bbsMessages.appendChild(item);
             });
             bbsMessages.scrollTop = bbsMessages.scrollHeight;
         }
 
+        function toggleControls(e, dot) {
+            e.stopPropagation();
+            const controls = dot.nextElementSibling;
+            document.querySelectorAll('.msg-controls').forEach(c => { if(c !== controls) c.style.display = 'none'; });
+            controls.style.display = controls.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.msg-controls').forEach(c => c.style.display = 'none');
+        });
+
         function postMessage() {
             const content = bbsContentInput.value.trim();
             if (!content) return;
-
             let name = bbsNameInput.value.trim();
-            if (bbsAnonCheck.checked || !name) {
-                name = 'ANONYMOUS';
-            }
-
+            if (bbsAnonCheck.checked || !name) name = 'ANONYMOUS';
             const now = new Date();
             const timeStr = `${now.getFullYear()}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-
             const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
-            messages.push({
-                name: name,
-                content: content,
-                time: timeStr
-            });
-
+            messages.push({ senderId: userId, name: name, content: content, time: timeStr });
             localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
             bbsContentInput.value = '';
+            loadMessages();
+        }
+
+        function deleteMessage(index) {
+            if (!confirm('[ WARNING: TERMINATE CONNECTION? ]')) return;
+            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
+            messages.splice(index, 1);
+            localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
+            loadMessages();
+        }
+
+        function startEdit(index) {
+            const container = document.getElementById(`msg-content-${index}`);
+            const originalContent = container.innerText;
+            container.innerHTML = `
+                <textarea class="edit-area" id="edit-box-${index}">${originalContent}</textarea>
+                <div style="display:flex; gap:0.5rem; margin-top:0.5rem; justify-content: flex-end;">
+                    <button class="ctrl-btn" onclick="saveEdit(${index})">[ SAVE ]</button>
+                    <button class="ctrl-btn" onclick="loadMessages()">[ CANCEL ]</button>
+                </div>
+            `;
+        }
+
+        function saveEdit(index) {
+            const newContent = document.getElementById(`edit-box-${index}`).value.trim();
+            if (!newContent) return;
+            const messages = JSON.parse(localStorage.getItem('wired_bbs_messages') || '[]');
+            messages[index].content = newContent;
+            messages[index].time += ' (EDITED)';
+            localStorage.setItem('wired_bbs_messages', JSON.stringify(messages));
             loadMessages();
         }
 
@@ -566,14 +562,8 @@
             if (window.location.hash === '#skip') {
                 const welcome = document.getElementById('welcome-sequence');
                 const portfolioScreen = document.querySelector('.portfolio-screen');
-                if (welcome) {
-                    welcome.style.animation = 'none';
-                    welcome.style.display = 'none';
-                }
-                if (portfolioScreen) {
-                    portfolioScreen.style.animation = 'none';
-                    portfolioScreen.style.opacity = '1';
-                }
+                if (welcome) { welcome.style.display = 'none'; }
+                if (portfolioScreen) { portfolioScreen.style.opacity = '1'; }
             }
         });
     </script>
