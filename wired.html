@@ -600,20 +600,31 @@
         }
 
         async function loadMessages() {
-            if (!_supabase) return;
+            if (!_supabase) {
+                bbsMessages.innerHTML = `<div style="color: #ff4d4d; font-size: 0.8rem; padding: 1rem;">[ SYSTEM ERROR: SUPABASE CLIENT NOT INITIALIZED ]</div>`;
+                return;
+            }
+            
             const { data: messages, error } = await _supabase
                 .from('messages')
                 .select('*')
                 .order('created_at', { ascending: true });
 
             if (error) {
-                bbsMessages.innerHTML = `<div style="color: #ff4d4d; font-size: 0.8rem; padding: 1rem;">[ CONNECTION ERROR: CHECK BROWSER CONSOLE ]</div>`;
+                console.error('Supabase Error:', error);
+                bbsMessages.innerHTML = `
+                    <div style="color: #ff4d4d; font-size: 0.8rem; padding: 1rem;">
+                        [ CONNECTION ERROR ]<br>
+                        CODE: ${error.code}<br>
+                        MSG: ${error.message}<br><br>
+                        * 請檢查是否已在 Supabase 創建 'messages' 表，並關閉 RLS 或添加權限項目。
+                    </div>`;
                 return;
             }
 
             bbsMessages.innerHTML = '';
             if (!messages || messages.length === 0) {
-                bbsMessages.innerHTML = '<div style="color: #495945; font-size: 0.9rem; padding: 1rem;">[ SYSTEM: NO CONNECTIONS FOUND. ]</div>';
+                bbsMessages.innerHTML = '<div style="color: #495945; font-size: 0.9rem; padding: 1rem;">[ SYSTEM: NO CONNECTIONS FOUND. (資料庫為空) ]</div>';
                 return;
             }
 
