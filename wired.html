@@ -51,8 +51,15 @@
         }
 
         @keyframes pulse-noise {
-            0% { filter: contrast(150%) brightness(120%) sepia(30%) hue-rotate(0deg); opacity: 0.3; }
-            100% { filter: contrast(220%) brightness(150%) sepia(80%) hue-rotate(20deg); opacity: 0.6; }
+            0% {
+                filter: contrast(150%) brightness(120%) sepia(30%) hue-rotate(0deg);
+                opacity: 0.3;
+            }
+
+            100% {
+                filter: contrast(220%) brightness(150%) sepia(80%) hue-rotate(20deg);
+                opacity: 0.6;
+            }
         }
 
         .scanlines {
@@ -111,8 +118,17 @@
         }
 
         @keyframes fadeOutSequence {
-            0%, 50% { opacity: 1; visibility: visible; }
-            100% { opacity: 0; visibility: hidden; }
+
+            0%,
+            50% {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
         }
 
         .portfolio-screen {
@@ -133,8 +149,15 @@
         }
 
         @keyframes fadeInPortfolio {
-            0% { opacity: 0; transform: translateY(-40%); }
-            100% { opacity: 1; transform: translateY(-50%); }
+            0% {
+                opacity: 0;
+                transform: translateY(-40%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(-50%);
+            }
         }
 
         .portfolio-grid {
@@ -185,7 +208,9 @@
             box-shadow: 0 0 15px rgba(209, 204, 184, 0.2);
         }
 
-        .category-link:hover::before { left: 150%; }
+        .category-link:hover::before {
+            left: 150%;
+        }
 
         .btn {
             display: inline-flex;
@@ -259,8 +284,15 @@
         }
 
         @keyframes terminalBoot {
-            0% { opacity: 0; transform: translateY(-50%) scaleY(0.01); }
-            100% { opacity: 1; transform: translateY(-50%) scaleY(1); }
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) scaleY(0.01);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) scaleY(1);
+            }
         }
 
         .bbs-header {
@@ -300,8 +332,15 @@
         }
 
         @keyframes textAppear {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .msg-dot {
@@ -321,8 +360,15 @@
         }
 
         @keyframes pulse-dot {
-            0% { box-shadow: 0 0 5px rgba(209, 204, 184, 0.4); filter: brightness(1); }
-            100% { box-shadow: 0 0 15px rgba(209, 204, 184, 1); filter: brightness(1.2); }
+            0% {
+                box-shadow: 0 0 5px rgba(209, 204, 184, 0.4);
+                filter: brightness(1);
+            }
+
+            100% {
+                box-shadow: 0 0 15px rgba(209, 204, 184, 1);
+                filter: brightness(1.2);
+            }
         }
 
         .msg-dot:hover {
@@ -355,14 +401,30 @@
             padding: 0.2rem 0.5rem;
         }
 
-        .ctrl-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+        .ctrl-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
 
-        .message-meta { font-size: 0.8rem; color: #8c7e6b; margin-bottom: 0.5rem; display: flex; gap: 1rem; }
-        .message-content { font-size: 1rem; line-height: 1.6; color: #d1ccb8; word-break: break-all; white-space: pre-wrap; }
+        .message-meta {
+            font-size: 0.8rem;
+            color: #8c7e6b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #d1ccb8;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
 
         .edit-area {
             width: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid #d1ccb8;
             color: #d1ccb8;
             font-family: inherit;
@@ -371,24 +433,62 @@
             box-sizing: border-box;
         }
 
-        .bbs-footer { display: flex; flex-direction: column; gap: 1rem; }
-        .input-row { display: flex; gap: 1rem; align-items: center; }
+        .bbs-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
         .bbs-input {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid #6b5c4d;
             color: #d1ccb8;
             padding: 0.8rem;
             font-family: inherit;
             font-size: 0.9rem;
         }
-        .bbs-input:focus { outline: none; border-color: #d1ccb8; }
-        textarea.bbs-input { width: 100%; height: 80px; resize: none; box-sizing: border-box; }
 
-        .anon-label { font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
-        .bbs-close { background: none; border: 1px solid #8c7e6b; color: #8c7e6b; cursor: pointer; padding: 0.2rem 0.5rem; }
+        .bbs-input:focus {
+            outline: none;
+            border-color: #d1ccb8;
+        }
 
-        .bbs-messages::-webkit-scrollbar { width: 6px; }
-        .bbs-messages::-webkit-scrollbar-thumb { background: #3a3228; }
+        textarea.bbs-input {
+            width: 100%;
+            height: 80px;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        .anon-label {
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bbs-close {
+            background: none;
+            border: 1px solid #8c7e6b;
+            color: #8c7e6b;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .bbs-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .bbs-messages::-webkit-scrollbar-thumb {
+            background: #3a3228;
+        }
     </style>
 </head>
 
@@ -429,7 +529,8 @@
             </div>
             <textarea id="bbs-content" class="bbs-input" placeholder="Enter message here..."></textarea>
             <div style="display: flex; justify-content: flex-end;">
-                <button class="btn" style="min-width: 8rem; height: 2.5rem; font-size: 1rem;" onclick="postMessage()">CONNECT</button>
+                <button class="btn" style="min-width: 8rem; height: 2.5rem; font-size: 1rem;"
+                    onclick="postMessage()">CONNECT</button>
             </div>
         </div>
     </div>
@@ -448,13 +549,13 @@
         });
 
         // --- Supabase Configuration ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        
+        const SUPABASE_URL = 'https://nrwphcveqpjaxhzlkkbk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yd3BoY3ZlcXBqYXhoemxra2JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNzAwODUsImV4cCI6MjA4ODg0NjA4NX0.F5-cZwTKixNMz76ecDEhHAy5CRbhSHtGpiChjzeubLY';
+
         let _supabase;
         try {
             _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } catch(e) {
+        } catch (e) {
             console.error("Supabase config error", e);
         }
 
@@ -531,7 +632,7 @@
                     `;
                 }
                 const d = new Date(msg.created_at);
-                const timeStr = `${d.getFullYear()}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                const timeStr = `${d.getFullYear()}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getDate().toString().padStart(2, '0')} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
 
                 item.innerHTML = `
                     ${controlsHtml}
@@ -556,7 +657,7 @@
         function toggleControls(e, dot) {
             e.stopPropagation();
             const controls = dot.nextElementSibling;
-            document.querySelectorAll('.msg-controls').forEach(c => { if(c !== controls) c.style.display = 'none'; });
+            document.querySelectorAll('.msg-controls').forEach(c => { if (c !== controls) c.style.display = 'none'; });
             controls.style.display = controls.style.display === 'flex' ? 'none' : 'flex';
         }
 
@@ -614,4 +715,5 @@
         });
     </script>
 </body>
+
 </html>
