@@ -412,8 +412,8 @@
         /* --- 3D Butterfly Easter Egg Styles --- */
         .butterfly-3d {
             position: fixed;
-            width: 180px;
-            height: 180px;
+            width: 250px;
+            height: 250px;
             z-index: 200;
             pointer-events: none;
             perspective: 1000px;
@@ -466,7 +466,7 @@
             }
             100% {
                 opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(1.2) rotateX(var(--rx)) rotateZ(var(--rz));
+                transform: translate(var(--tx), var(--ty)) scale(1.4) rotateX(var(--rx)) rotateZ(var(--rz));
             }
         }
     </style>
@@ -605,14 +605,14 @@
             function spawn3DButterfly(x, y) {
                 const b = document.createElement('div');
                 b.className = 'butterfly-3d';
-                b.style.left = (x - 90) + 'px'; // Center 180px width
-                b.style.top = (y - 90) + 'px';  // Center 180px height
+                b.style.left = (x - 125) + 'px'; // Center 250px width
+                b.style.top = (y - 125) + 'px';  // Center 250px height
                 
-                // Elegant randomized trajectories
-                const tx = (Math.random() - 0.5) * 1200 + 'px';
-                const ty = - (600 + Math.random() * 400) + 'px'; // Fly upward
-                const rx = (Math.random() * 40 - 20) + 'deg';
-                const rz = (Math.random() * 360 - 180) + 'deg';
+                // Panoramic randomized trajectories covering more screen
+                const tx = (Math.random() - 0.5) * 1800 + 'px';
+                const ty = - (800 + Math.random() * 600) + 'px'; // Fly higher/further
+                const rx = (Math.random() * 60 - 30) + 'deg';
+                const rz = (Math.random() * 720 - 360) + 'deg';
                 
                 b.style.setProperty('--tx', tx);
                 b.style.setProperty('--ty', ty);
@@ -626,10 +626,10 @@
                     </div>
                 `;
                 
-                b.style.animation = 'fly-elegant 6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                b.style.animation = 'fly-elegant 12s cubic-bezier(0.2, 0, 0.4, 1) forwards';
                 
                 document.body.appendChild(b);
-                setTimeout(() => b.remove(), 6000);
+                setTimeout(() => b.remove(), 12000);
             }
         </script>
 </body>
