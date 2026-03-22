@@ -14,108 +14,124 @@
             height: 100%;
             overflow: hidden;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: "Noto Serif JP", "MS Mincho", "Mincho", serif;
         }
 
-        .lsd-background {
+        /* Colorful, shifting under-layer */
+        .color-layer {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
                 #ff003c, #ff8a00, #e52e71, #9b00e8, #00f0ff, #00ff66, #ff003c
             );
-            background-size: 300% 300%;
-            filter: blur(8px) contrast(150%) saturate(200%);
+            filter: blur(20px) saturate(300%) contrast(200%);
+            animation: rotateColors 5s linear infinite;
             z-index: 1;
-            opacity: 0;
-            animation: 
-                fadein 2s forwards, 
-                lsd-pan 6s linear infinite, 
-                spin 25s linear infinite;
         }
 
-        @keyframes fadein {
-            0% { opacity: 0; }
-            100% { opacity: 0.85; }
+        /* TV Static overlay */
+        .static-layer {
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.8;
+            z-index: 2;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            animation: staticNoise 0.15s infinite;
         }
 
-        @keyframes lsd-pan {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Distortion wrapper */
+        .distort-wrapper {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3;
+            animation: twitch 3s infinite steps(1);
+            pointer-events: none;
         }
-        
-        @keyframes spin {
+
+        @keyframes rotateColors {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        .noise {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-            opacity: 0.15;
-            z-index: 2;
-            pointer-events: none;
-            mix-blend-mode: overlay;
+        @keyframes staticNoise {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-5%, 5%); }
+            40% { transform: translate(5%, -5%); }
+            60% { transform: translate(-2%, -2%); }
+            80% { transform: translate(2%, 2%); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes twitch {
+            0% { transform: skewX(0deg) scale(1); filter: hue-rotate(0deg); }
+            5% { transform: skewX(-15deg) scale(1.1); filter: hue-rotate(90deg) invert(20%); }
+            10% { transform: skewX(10deg) scale(1); filter: hue-rotate(0deg); }
+            15% { transform: skewX(-5deg) scale(1.05); }
+            20% { transform: skewX(0deg) scale(1); }
+            100% { transform: skewX(0deg); }
         }
 
         .text-container {
-            position: relative;
+            position: absolute;
+            right: 15%;
+            top: 50%;
+            transform: translateY(-50%);
             z-index: 10;
             color: #fff;
-            font-size: 3.5rem;
+            font-size: 3rem;
             writing-mode: vertical-rl;
-            letter-spacing: 0.3em;
+            letter-spacing: 1.5em; /* Scattered text */
             text-shadow: 
-                0 0 10px rgba(255, 255, 255, 0.8), 
-                0 0 20px rgba(255, 0, 128, 0.8),
-                0 0 40px rgba(0, 255, 255, 0.8),
-                3px 3px 0px #000;
+                2px 0 0 rgba(255, 0, 0, 0.8),
+                -2px 0 0 rgba(0, 255, 255, 0.8),
+                0 0 15px rgba(255, 255, 255, 1);
             opacity: 0;
             animation: textFadeIn 2.5s 0.5s ease-in-out forwards;
             font-weight: bold;
             mix-blend-mode: difference;
+            height: 80vh; /* Allow vertical spreading */
+            display: flex;
+            align-items: center;
         }
 
         @keyframes textFadeIn {
-            0% { opacity: 0; filter: blur(20px); transform: scale(1.1); }
-            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
+            0% { opacity: 0; filter: blur(15px); }
+            100% { opacity: 1; filter: blur(0px); }
         }
 
         .overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: #fff;
             opacity: 0;
             z-index: 50;
             pointer-events: none;
-            transition: opacity 1.5s ease;
+            transition: opacity 0.5s ease;
         }
-        
+
         @media (max-width: 768px) {
             .text-container {
-                font-size: 2rem;
+                font-size: 1.8rem;
+                right: 10%;
+                letter-spacing: 1em;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="lsd-background"></div>
-    <div class="noise"></div>
+    <div class="distort-wrapper">
+        <div class="color-layer"></div>
+        <div class="static-layer"></div>
+    </div>
+    
     <div class="text-container">
         現実に在るものだけが、真実ではない
     </div>
+    
     <div class="overlay" id="flash"></div>
 
     <script>
@@ -124,7 +140,7 @@
             flash.style.opacity = '1';
             setTimeout(() => {
                 window.location.href = 'index.html';
-            }, 1000);
+            }, 500);
         }, 5000); // 5 seconds animation then redirect
     </script>
 </body>
