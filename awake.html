@@ -17,43 +17,25 @@
             font-family: "Noto Serif JP", "MS Mincho", "Mincho", serif;
         }
 
-        /* Colorful, shifting under-layer */
-        .color-layer {
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(
-                from 0deg at 50% 50%,
-                #ff003c, #ff8a00, #e52e71, #9b00e8, #00f0ff, #00ff66, #ff003c
-            );
-            filter: blur(20px) saturate(300%) contrast(200%);
-            animation: rotateColors 5s linear infinite;
-            z-index: 1;
-        }
-
-        /* TV Static overlay */
+        /* Pure black and white TV Static overlay */
         .static-layer {
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-            opacity: 0.8;
-            z-index: 2;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 1;
+            z-index: 1;
             pointer-events: none;
-            mix-blend-mode: overlay;
-            animation: staticNoise 0.15s infinite;
+            filter: grayscale(1) contrast(3) brightness(1.5);
+            animation: staticNoise 0.08s infinite;
         }
 
         /* Distortion wrapper */
         .distort-wrapper {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 3;
-            animation: twitch 3s infinite steps(1);
+            z-index: 2;
+            animation: twitch 2s infinite steps(1);
             pointer-events: none;
-        }
-
-        @keyframes rotateColors {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         @keyframes staticNoise {
@@ -66,10 +48,10 @@
         }
 
         @keyframes twitch {
-            0% { transform: skewX(0deg) scale(1); filter: hue-rotate(0deg); }
-            5% { transform: skewX(-15deg) scale(1.1); filter: hue-rotate(90deg) invert(20%); }
-            10% { transform: skewX(10deg) scale(1); filter: hue-rotate(0deg); }
-            15% { transform: skewX(-5deg) scale(1.05); }
+            0% { transform: skewX(0deg) scale(1); }
+            5% { transform: skewX(-15deg) scale(1.1); }
+            10% { transform: skewX(10deg) scale(1.05); }
+            15% { transform: skewX(-5deg) scale(1); }
             20% { transform: skewX(0deg) scale(1); }
             100% { transform: skewX(0deg); }
         }
@@ -85,11 +67,11 @@
             writing-mode: vertical-rl;
             letter-spacing: 1.5em; /* Scattered text */
             text-shadow: 
-                2px 0 0 rgba(255, 0, 0, 0.8),
-                -2px 0 0 rgba(0, 255, 255, 0.8),
-                0 0 15px rgba(255, 255, 255, 1);
+                0 0 10px rgba(0, 0, 0, 1),
+                0 0 20px rgba(0, 0, 0, 1),
+                0 0 30px rgba(255, 255, 255, 0.8);
             opacity: 0;
-            animation: textFadeIn 2.5s 0.5s ease-in-out forwards;
+            animation: textFadeIn 2s 0.5s ease-in-out forwards;
             font-weight: bold;
             mix-blend-mode: difference;
             height: 80vh; /* Allow vertical spreading */
@@ -124,7 +106,6 @@
 
 <body>
     <div class="distort-wrapper">
-        <div class="color-layer"></div>
         <div class="static-layer"></div>
     </div>
     
