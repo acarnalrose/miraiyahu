@@ -983,12 +983,29 @@
             await loadMessages();
         }
 
+        function applySkipLogic() {
+            const welcome = document.getElementById('welcome-sequence');
+            const portfolioScreen = document.querySelector('.portfolio-screen');
+            if (welcome) { 
+                welcome.style.display = 'none';
+                welcome.style.animation = 'none';
+            }
+            if (portfolioScreen) { 
+                portfolioScreen.style.animation = 'none';
+                portfolioScreen.style.opacity = '1';
+                portfolioScreen.style.transform = 'translateY(-50%)';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#skip') {
-                const welcome = document.getElementById('welcome-sequence');
-                const portfolioScreen = document.querySelector('.portfolio-screen');
-                if (welcome) { welcome.style.display = 'none'; }
-                if (portfolioScreen) { portfolioScreen.style.opacity = '1'; }
+                applySkipLogic();
+            }
+        });
+
+        window.addEventListener('pageshow', (e) => {
+            if (e.persisted || window.location.hash === '#skip') {
+                applySkipLogic();
             }
         });
     </script>
