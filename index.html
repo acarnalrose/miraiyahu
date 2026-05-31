@@ -534,8 +534,8 @@
         // 獲取鼠標位置並更新 CSS 變量
         document.addEventListener('mousemove', (e) => {
             const body = document.body;
-            const x = (e.clientX / body.clientWidth * 100) + '%';
-            const y = (e.clientY / body.clientHeight * 100) + '%';
+            const x = (e.clientX / window.innerWidth * 100) + '%';
+            const y = (e.clientY / window.innerHeight * 100) + '%';
             document.documentElement.style.setProperty('--x', x);
             document.documentElement.style.setProperty('--y', y);
         });
@@ -635,8 +635,8 @@
             // 獲取鼠標位置並更新 CSS 變量 (既有邏輯)
             document.addEventListener('mousemove', (e) => {
                 const body = document.body;
-                const x = (e.clientX / body.clientWidth * 100) + '%';
-                const y = (e.clientY / body.clientHeight * 100) + '%';
+                const x = (e.clientX / window.innerWidth * 100) + '%';
+                const y = (e.clientY / window.innerHeight * 100) + '%';
                 document.documentElement.style.setProperty('--x', x);
                 document.documentElement.style.setProperty('--y', y);
             });
