@@ -106,18 +106,18 @@
         .back-btn-container { padding: 1.5rem; border-top: 2px double var(--border-color); background: rgba(0, 0, 0, 0.5); }
         .btn { display: flex; align-items: center; justify-content: center; box-sizing: border-box; height: 3rem; width: 100%; background: linear-gradient(135deg, #495945 0%, #2c2416 100%); color: #d1ccb8; border: 2px outset #7a8c73; border-bottom: 2px solid #1a150d; border-right: 2px solid #1a150d; font-family: 'Courier New', Courier, monospace; font-size: 1rem; font-weight: bold; letter-spacing: 0.1rem; text-decoration: none; transition: all 0.05s ease; cursor: pointer; }
         .btn:active { border: 2px inset #1a150d; border-bottom: 2px solid #7a8c73; border-right: 2px solid #7a8c73; transform: translate(1px, 1px); }
-        .content-area { flex-grow: 1; padding: 3rem 4rem; overflow-y: auto; position: relative; }
+        .content-area { flex-grow: 1; padding: 4rem 6rem; overflow-y: auto; position: relative; }
         .story-title { font-size: 2.5rem; font-weight: 200; letter-spacing: 0.3rem; margin-top: 0; margin-bottom: 3rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 1rem; text-shadow: 0 0 8px rgba(224, 224, 224, 0.2); }
         .story-text {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            letter-spacing: 0.08rem;
-            max-width: 850px;
+            font-size: 1.1rem;
+            line-height: 2.1;
+            letter-spacing: 0.1rem;
+            max-width: 720px;
             margin: 0 auto;
             text-align: justify;
         }
         .story-text p {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
             text-indent: 0;
         }
         .cursor-light { position: absolute; width: 40vw; height: 40vw; background: radial-gradient(circle at var(--x) var(--y), rgba(209, 204, 184, 0.15) 0%, transparent 50%); pointer-events: none; mix-blend-mode: overlay; z-index: 3; top: 0; left: 0; }
@@ -233,7 +233,7 @@
                 max-width: 60%;
             }
             .content-area {
-                padding: 1rem 1.2rem 3rem 1.2rem !important;
+                padding: 1.5rem 1.8rem 4rem 1.8rem !important;
                 flex-grow: 1;
                 width: 100%;
                 box-sizing: border-box;
@@ -242,8 +242,10 @@
                 display: none;
             }
             .story-text {
-                font-size: 1.05rem !important;
-                line-height: 1.9;
+                font-size: 1.02rem !important;
+                line-height: 1.85 !important;
+                letter-spacing: 0.05rem !important;
+                max-width: 100% !important;
             }
             /* Novel specific: keep H2 visible */
             .story-text h2 {
