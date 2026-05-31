@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="WIRED — Miraiyahu 的數位地下世界。留言板、數位畫廊、與未知的連結。">
     <title>Miraiyahu | WIRED</title>
@@ -644,6 +645,97 @@
         }
         .art-grid::-webkit-scrollbar-thumb {
             background: #3a3228;
+        }
+
+        /* 手機板響應式設計 (電腦端不用改) */
+        @media (max-width: 768px) {
+            #welcome-sequence h1 {
+                font-size: 1.8rem !important;
+                letter-spacing: 0.2rem !important;
+                text-align: center;
+                padding: 0 1rem;
+            }
+            #welcome-sequence p {
+                font-size: 0.95rem !important;
+                letter-spacing: 0.1rem !important;
+                text-align: center;
+                padding: 0 1rem;
+            }
+            .portfolio-screen {
+                width: 90% !important;
+                left: 5% !important;
+                align-items: center !important;
+            }
+            .portfolio-grid {
+                width: 100% !important;
+                max-width: 280px !important;
+                margin: 0 auto !important;
+            }
+            .category-link {
+                padding: 1.2rem 1rem !important;
+                font-size: 1.1rem !important;
+                padding-left: 1.5rem !important;
+            }
+            .bbs-screen {
+                width: 95% !important;
+                height: 85% !important;
+                left: 2.5% !important;
+                padding: 1rem !important;
+                box-sizing: border-box;
+            }
+            .bbs-header h2 {
+                font-size: 1.2rem !important;
+                letter-spacing: 0.1rem !important;
+            }
+            .bbs-messages {
+                padding: 0.5rem !important;
+                gap: 1rem !important;
+            }
+            .message-meta {
+                font-size: 0.75rem !important;
+                flex-wrap: wrap;
+                gap: 0.5rem !important;
+            }
+            .message-content {
+                font-size: 0.9rem !important;
+            }
+            .input-row {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 0.5rem !important;
+            }
+            .bbs-input {
+                font-size: 0.85rem !important;
+                padding: 0.6rem !important;
+            }
+            .art-screen {
+                width: 95% !important;
+                height: 90% !important;
+                left: 2.5% !important;
+                padding: 1rem !important;
+                box-sizing: border-box;
+            }
+            .art-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+                gap: 1.2rem !important;
+                padding: 0.5rem !important;
+            }
+            .art-item {
+                padding: 8px !important;
+            }
+            .art-item img {
+                height: 150px !important;
+            }
+            .lightbox-img {
+                max-width: 95% !important;
+                max-height: 80% !important;
+            }
+            .nav-btn {
+                padding: 1rem 0.5rem !important;
+                font-size: 1.5rem !important;
+            }
+            .nav-btn.prev { left: 0.5rem !important; }
+            .nav-btn.next { right: 0.5rem !important; }
         }
     </style>
 </head>

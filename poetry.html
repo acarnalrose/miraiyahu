@@ -2,6 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="Miraiyahu 詩歌隨筆 — 收錄原創詩歌、散文與隨筆作品。">
     <title>Miraiyahu | 詩歌隨筆</title>
@@ -111,6 +112,44 @@
         .scroll-container { overflow-y: auto; flex-grow: 1; padding: 0 4rem; }
         .cursor-light { position: absolute; width: 40vw; height: 40vw; background: radial-gradient(circle at var(--x) var(--y), rgba(209, 204, 184, 0.15) 0%, transparent 50%); pointer-events: none; mix-blend-mode: overlay; z-index: 3; top: 0; left: 0; }
 
+
+        /* 手機板響應式設計 (電腦端不用改) */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem !important;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+                text-align: center;
+            }
+            .title {
+                font-size: 1.8rem !important;
+                letter-spacing: 0.2rem !important;
+            }
+            .back-btn {
+                padding: 0 1rem !important;
+                height: 2.5rem !important;
+                font-size: 0.85rem !important;
+            }
+            .scroll-container {
+                padding: 0 1.2rem !important;
+            }
+            .category-header {
+                font-size: 1.2rem !important;
+                letter-spacing: 0.2rem !important;
+                margin: 1.5rem 0 !important;
+            }
+            .poem-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+                gap: 1rem !important;
+            }
+            .poem-card {
+                padding: 1.2rem !important;
+            }
+            .poem-title {
+                font-size: 1rem !important;
+            }
+        }
     </style>
 </head>
 <body>
