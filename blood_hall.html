@@ -26,7 +26,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: serif;
+            font-family: "Georgia", "Times New Roman", "Songti TC", "Songti SC", "SimSun", "Noto Serif CJK TC", "Noto Serif CJK SC", serif;
             overflow: hidden;
             position: relative;
         }
@@ -200,17 +200,33 @@
 
         .story-text {
             font-size: 1.15rem;
-            line-height: 2.2;
-            letter-spacing: 0.08rem;
+            line-height: 1.8;
+            letter-spacing: 0.05rem;
             max-width: 800px;
             margin: 0 auto;
             text-align: justify;
         }
 
+
+        .story-text h2 {
+            margin-top: 6rem;
+            margin-bottom: 2.5rem;
+            color: #8c7e6b;
+            font-size: 1.65rem;
+            font-weight: 300;
+            letter-spacing: 0.15rem;
+            border-bottom: 1px solid rgba(107, 92, 77, 0.3);
+            padding-bottom: 0.8rem;
+            text-align: center;
+            font-family: inherit;
+        }
+        .story-text h2:first-of-type {
+            margin-top: 1.5rem;
+        }
+        
         .story-text p {
-            margin-bottom: 1.5rem;
-            text-indent: 2em;
-            /* 首行縮排 */
+            margin-bottom: 1.6rem;
+            text-indent: 0;
         }
 
         /* 等待輸入的閃爍游標 */
@@ -366,10 +382,26 @@
                 margin-bottom: 2rem;
                 text-align: center;
             }
-            .story-text {
-                font-size: 1.05rem !important;
-                line-height: 1.9;
+
+            .story-text h2 {
+                margin-top: 4rem !important;
+                margin-bottom: 2rem !important;
+                font-size: 1.3rem !important;
+                letter-spacing: 0.1rem !important;
+                padding-bottom: 0.6rem !important;
             }
+            .story-text h2:first-of-type {
+                margin-top: 1.5rem !important;
+            }
+        
+            .story-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            letter-spacing: 0.05rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: justify;
+        }
         }
     </style>
 </head>
@@ -432,8 +464,7 @@
         <div class="content-area">
             <h1 class="story-title">《血色堂屋》</h1>
             <div class="story-text">
-                <h2 id="chapter-1"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-1">
                     第一章 〈血色堂屋〉——二丫視角</h2>
                 <p>天空什麼時候是藍色的？我只見過灰色，黑色，和被血色染紅的。</p>
                 <p>腳踝被冰冷的鐵鏈拴住，我一動，金屬碰金屬，骨頭裡都響一下。空氣裡是發霉的稻穀味，還有一種油脂壞掉的味道。深吸一口，像吞了一口生鏽的鐵水。</p>
@@ -462,8 +493,7 @@
                 <p>「東……風……不……與……」</p>
                 <p>我的聲音抖得不像我自己的。詩斷在這裡。</p>
                 <p>後面的我背不出來了。</p>
-                <h2 id="chapter-2"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-2">
                     第二章 〈母親的殘影〉——慧心視角</h2>
                 <p>教室裡的粉筆灰在光線下跳得厲害。我用指尖拂過桌面，那層白灰細細密密地嵌進指紋裡。我想起我媽的手。</p>
                 <p>死前的那個冬天，她的手也是這種顏色。不是因為寫字，是凍裂後的死皮，像一層撕不乾淨的廉價塑料。她坐在灶台前削地瓜，皮一圈圈掉下來，她的人卻像是定住了，目光穿過土牆，不知道在看哪裡。我想強調的是，那時候我並不明白那種眼神，直到後來我看見我父親的那雙手——那雙白淨、修長、能寫出一手漂亮小楷的手。</p>
@@ -480,8 +510,7 @@
                 <p>可每當風吹過那片墳地，我的後頸總會莫名地發涼，像有一隻帶血的手，輕輕搭在我的衣領上。</p>
                 <p>我知道那是誰。 她在風裡問我：慧心，妳走了，二丫怎麼辦？</p>
                 <p>我沒回頭。 我只是低著頭，繼續往前走。</p>
-                <h2 id="chapter-3"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-3">
                     第三章 〈血色再現〉——二丫視角</h2>
                 <p>天亮以前，我是被凍醒的。窗縫裡的灰色像冷掉的灰燼一樣漏進來，鋪在地上。我感覺不到我的腳，只感覺到鐵鏈。傷口處黏糊糊的，那是鐵鏽和血和汗攪在一起的味道。</p>
                 <p>夢裡我聽見青蛙叫。聲音很大，像水要把我淹掉。我抬頭，看見老師的臉浮在水面上——他在笑。醒來的時候，我嗓子是乾的。身上每一處都疼。但疼跟疼不一樣——有的疼是一片，悶悶的；有的疼是一條線，從哪裡到哪裡，能畫出來。我在心裡把它們分一分，不知道為什麼，分完好像沒那麼怕了。</p>
@@ -493,8 +522,7 @@
                 <p>因為在這個除了疼什麼都沒有的地方，這是我唯一的寶貝。</p>
                 <p>夜更深了。我試著背那句詩。「東……風……不……與……」斷在這裡。每天都斷在這裡。我背不出後面。後面是「周郎便」。我知道。我以前會背。我現在不會了。</p>
                 <p>不是忘了。是說不出來。</p>
-                <h2 id="chapter-4"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-4">
                     第四章 〈城市的囚籠〉——慧心視角</h2>
                 <p>補習的那段日子，我每天五點起床跑圈。水泥地又冷又硬，我一圈圈跑，不知道盡頭在哪——只是需要那種「正在離開什麼」的感覺，來撐住自己。</p>
                 <p>父親籌來的那疊錢，邊角發毛，帶著菸垢味。我接過來的時候，指尖碰到了他的老繭。我們心照不宣——他買一個有出息的女兒，我買一張離開的票。誰也沒說破。說破了反而難堪。</p>
@@ -514,8 +542,7 @@
                 <p>我一直告訴自己，走了就是走了。</p>
                 <p>可我還是一直在回頭。</p>
                 <p>只是沒有人看見而已。</p>
-                <h2 id="chapter-5"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-5">
                     第五章 〈隱匿荒誕〉——二丫視角</h2>
                 <p>夜壓下來，厚重的屋簷低垂得似乎要將整個堂屋壓扁 。我躲在床底，肚子貼著冰冷的石磚，那種涼意細細密密地鑽進皮肉裡 。這底下的味道很雜，是陳年泥土拌著一點點發酸的霉味，聞久了，我覺得自己也快要變成牆角那塊發青的苔 。</p>
                 <p>我把鐵鏈緊緊抱在懷裡，像抱著一個睡著的孩子，只要我不動，它就不會發出那種尖銳的冷響 。</p>
@@ -530,8 +557,7 @@
                 <p>她走了，腳步聲輕得像一陣抓不住的風 。我蹲在黑暗裡，看著那碗湯慢慢變涼，看著那些蔥葉沉到底部。我一小口一小口地抿著，像是在吞嚥一場隨時會醒的夢 。</p>
                 <p>我不想喝完。</p>
                 <p>喝完了，這屋子就又只剩下我，和這條長了牙齒的鏈子了 。空氣裡彌散著膨脹的恐懼。</p>
-                <h2 id="chapter-6"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-6">
                     第六章 〈紅包遺夢〉——慧心視角</h2>
                 <p>我每次回家的夜車都在天亮以前到。火車停的時候，月台上沒有人。我背著包走出車站，村口的稻田還在睡。夜風吹過來，我聞到熟悉的味道——是村裡的味道，泥、牛糞、燒柴的煙——這個味道我在城裡每晚都夢得到。</p>
                 <p>我提著一個紅紙袋。裡面有兩樣東西——糖，和一把銼刀。銼刀是我在城裡的五金行買的。我在那家店門口站了很久，才走進去。我跟老闆說我要一把小的、能磨鐵的。老闆看了我一眼，沒問什麼，就遞給我一把。我把它包在糖底下。</p>
@@ -551,8 +577,7 @@
                 <p>她低下頭，看著地上的糖。她沒有撿。她沒有罵我。她沒有哭。她沒有推開我。她只是不撿。那比任何話都狠。</p>
                 <p>過了很久，她開口——「姐姐。」就這兩個字。她沒有後文。她叫我姐姐——是因為她記得我；也是因為她在說，我們之間還沒有完。雖然我空著手來，雖然這次什麼都沒給她。她還願意叫我姐姐。</p>
                 <p>那一刻我寧願她罵我。</p>
-                <h2 id="chapter-7"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-7">
                     第七章 〈鏡中的自己〉——慧心視角</h2>
                 <p>錄取通知書寄到的那天，村子裡的蟬鳴吵得讓人心慌。</p>
                 <p>那張紙被郵遞員塞進門縫的時候，邊角被泥水蹭黃了一塊。父親把它拿在手裡反覆地搓，指腹的厚繭發出沙沙的聲音。他笑得很舒展——這是他這幾年第一次真正意義上的高興。他把紙拍在桌上，震落了一層積了很久的灰。</p>
@@ -604,8 +629,7 @@
                 <p>我先走。</p>
                 <p>我先活著。</p>
                 <p>活著之後再說。</p>
-                <h2 id="chapter-8"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-8">
                     第八章（紅線與針腳）——二丫視角</h2>
                 <p>二丫坐在小板凳上，那團紅線就堆在她膝蓋上。那是種劣質的紅，染料的味道很衝，帶著一股子嗆人的化學辛辣味。她伸手去理線，指甲縫裡都染上了那種顏色，像是剛剛徒手撕開了什麼活物。</p>
                 <p>她正在繡一雙「囍」字枕頭。</p>
@@ -616,8 +640,7 @@
                 <p>「不用。」我的聲音乾得像枯樹皮，「城裡有機器，快得很。」</p>
                 <p>她低下頭，又「噗」的一聲，扎下了下一針。 「那挺好的，機器不覺得疼。」</p>
                 <p>我看著她的後腦勺，看著她那截細瘦、蒼白的脖子。我心裡那個最狠的聲音在尖叫：跑啊！快跑！ 可我的身體卻像被那根紅絲線死死釘在了板凳上。</p>
-                <h2 id="chapter-9"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-9">
                     第九章〈繡花〉——二丫母親視角</h2>
                 <p>那年我十八歲，卻記不清她幾歲。母親從來不記日子，只記「縫完哪道花邊」或「誰家的嫁妝」。她說：女孩子的命，不是從生下來那天開始的，是從「被送人」那天才算起。</p>
                 <p>她總坐在窗邊繡花，背影微駝，像一柄用舊的繡針。屋裡沒有鐘，只有她手腕抖動時的節奏，叩叩叩，一針一線地把時間縫進布上。那布堆積在她膝上，像一座無聲的山。每一張花樣圖紙對</p>
@@ -633,8 +656,7 @@
                 <p>那是一方未完成的枕巾，上頭是一半牡丹，一行字寫到一半：</p>
                 <p>「浮雲蔽日何時盡，繡線穿骨亦無聲」</p>
                 <p>那針法斷了，就像她的命。</p>
-                <h2 id="chapter-10"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-10">
                     第十章 〈絕望之音〉——二丫視角</h2>
                 <p>夜裡，他的腳步聲像是一塊被水泡脹的木頭，悶悶地在堂屋裡迴響 。那聲「?噠」的鎖門聲，是這世界上最後一根火柴熄滅的聲音 。</p>
                 <p>肚子裡空空的，中午那碗豬食的味道還掛在嗓子眼。發黑的菜葉、帶著唾沫腥氣的碎米，那味道黏糊糊的，像一隻手掐著我的脖子 。他說話的聲音總是那麼溫柔，像是在教課文，可這溫柔比棍子更讓我害怕 。</p>
@@ -648,8 +670,7 @@
                 <p>外面的蛙鳴吵得要命。慧心姐姐說青蛙會唱給我聽，可她不知道，這裡的青蛙不是在唱歌，它們是在替我喊疼 。</p>
                 <p>村裡的人每天從門口走過。腳步聲、說話聲、倒水聲，就在牆的那一頭。他們知道我就在門後面，知道這條鐵鏈在響 。不是他們看不見我，是他們在心裡把我埋了。 他們覺得只要不看，我就不存在；只要不聽，這屋子裡就沒有哭聲。</p>
                 <p>我躺在那裡，月光照在牆上的畫像上，白慘慘的 。 鐵鏈動了一下。我沒去管它。 明天會跟今天一樣，我想。 然後我數到了第八條裂縫。</p>
-                <h2 id="chapter-11"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-11">
                     第十一章 〈離開的人〉——慧心視角</h2>
                 <p>我每個月還是會回去一次。</p>
                 <p>不是回那個屋子。是回村口那片荒地——母親的墳。幾塊碎石壘起來，沒有名字，連個正經的木牌都沒有。</p>
@@ -694,8 +715,7 @@
                 <p>火車開動的那一刻，我發現自己手心全是汗，濕冷濕冷的。</p>
                 <p>我離開了。</p>
                 <p>帶著滿腦子的字，和一身洗不掉的、那個屋子的味道。</p>
-                <h2 id="chapter-12"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-12">
                     第十二章 〈空房間〉——二丫視角</h2>
                 <p>牆在說話，它們低聲呢喃，每一磚每一瓦都在唸我名字，只是</p>
                 <p>每次都唸錯。它們叫我「錯字」、「草稿」、「破句」、「筆誤」。我想糾正它們，可我的舌頭變硬了，像被墨汁泡過的舊毛筆，筆鋒斷裂，發不出聲。</p>
@@ -721,8 +741,7 @@
                 <p>我望著堂屋的門，它關著。門縫裡透進一點光，像細細的刀子，劃不破黑。</p>
                 <p>我想出去，但我腳上的鐵鏈不答應。</p>
                 <p>我只有十二歲，可我已經很老了。</p>
-                <h2 id="chapter-13"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-13">
                     第十三章〈焚書的人〉——慧心視角</h2>
                 <p>我回村那天是端午。</p>
                 <p>村巷裡掛著新割的艾草，那種帶點野性的苦味，混著糯米和粽葉的清香，在潮濕的空氣裡鑽來鑽去。我看見孩子們手腕上的五彩繩，亮晃晃的。我提著那一袋書，覺得自己像個格格不入的祭司，正走向一座已經塌陷的神廟。</p>
@@ -742,8 +761,7 @@
                 <p>我用鞋底碾滅了最後一點火星。 在那堆灰燼裡，我撥出一張燒剩的殘頁，上面只剩半個焦黑的「春」字。我把它塞進口袋，指尖被餘溫燙得發麻。</p>
                 <p>外頭傳來一聲清脆的鞭炮響，他們在笑。 二丫依然捧著她那本課本，像捧著一具不能下葬的屍體。</p>
                 <p>我能燒掉那些裝幀精美的書。 但我燒不掉那些已經鑽進她的骨頭裡、長進她的血肉中，把她活活勒死的字。</p>
-                <h2 id="chapter-14"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-14">
                     第十四章〈最後的光〉——二丫視角</h2>
                 <p>我夢見自己是一隻鳥，飛在一片沒有雲的天上。</p>
                 <p>風從羽毛縫隙裡穿過，我笑出聲。我記得笑的感覺，是胸口像有陽光在跳。</p>
@@ -771,8 +789,7 @@
                 <p>我不知道自己為什麼要說這句，只覺得它像是一個輪迴的起點，也像是結束時最後一點光。</p>
                 <p>我盯著那糖，糖在嘴裡慢慢融化。</p>
                 <p>那是我世界裡最後一件甜的東西。</p>
-                <h2 id="chapter-15"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-15">
                     第十五章〈父親〉——慧心視角</h2>
                 <p>父親曾是村裡最受敬重的人。他身形挺拔、總是衣著整潔，無論寒暑都穿著那身灰藍色的舊中山裝。他講課時聲音抑揚頓挫，字跡如刀劃玉石。教室裡的孩子在陽光下坐得筆直，像一排排等待修剪的木樁。村長說他是「鄉村文明的燈塔」。他也喜歡這稱號，常在課堂上自稱「語文乃民族之魂」。</p>
                 <p>他的教鞭總插在桌側，似劍非劍，敲桌子時鏗鏘有力。他最喜歡讓學生背誦《出師表》或《岳陽樓記》，背錯的孩子得在課後留下罰寫。他說語文要嚴，「錯一筆，便壞了一生。」</p>
@@ -780,8 +797,7 @@
                 <p>他的罵人不帶髒字，卻句句比棍子更狠。他說我哭是「無教養」，說我不背課文是「自甘墮落」。他最常說的句子是：「你要是不學會閉嘴，就一輩子都開不了口。」那句話我記了一輩子，像一道無形的傷口，卡在喉頭。我試過在紙上寫「我恨你」，但那紙被他一把撕碎。他說：「你有筆，卻沒理。」那一夜我被打到骨裂，他仍端坐如山，說：「這是教育。」</p>
                 <p>我離家那年，他仍在學校升旗，聲音鏗鏘如鐘。後來我聽說他退了，說是「身體不好」，也有人說他「教得太嚴了」。可沒有人說過，他錯了。他的學生們長大，有的出村當兵，有的考上了師範學校，還常寄賀卡來感謝他。</p>
                 <p>我回村那次，看見他一個人坐在老學校的台階上，手裡拿著一本發黃的課本，盯著那句「桃李滿天下」發呆。他沒認出我。我卻清楚，那個曾用語言造屋、以規訓為磚的人，如今只剩空殼。那課本掉在他膝上，風一吹，紙頁亂翻，像是他再也握不住的什麼。</p>
-                <h2 id="chapter-16"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-16">
                     第十六章〈埋名〉——慧心視角</h2>
                 <p>我沒去參加那場所謂的「喪禮」。</p>
                 <p>村裡人說她是「瘋了的陳老師小婆」，死在雨夜裡，被發現的時</p>
@@ -811,8 +827,7 @@
                 <p>我停下腳步，轉身最後望了一眼她的墳。</p>
                 <p>心想：她的名字不在詩裡，不在書裡，不在課堂裡。</p>
                 <p>她的名字，在我心裡。</p>
-                <h2 id="chapter-17"
-                    style="margin-top: 3rem; margin-bottom: 1.5rem; color: #8c7e6b; font-size: 1.5rem; border-bottom: 1px solid #4a3e31; padding-bottom: 0.5rem;">
+                <h2 id="chapter-17">
                     尾聲</h2>
                 <p>姐姐，那張紙沒燒完。</p>
                 <p>我看見了，那個字底下有一橫，是我偷偷用指甲劃上去的。</p>
