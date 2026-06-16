@@ -298,10 +298,23 @@
             left: 0;
         }
 
+        .mobile-only-content {
+            display: none;
+        }
+        .desktop-only-content {
+            display: block;
+        }
+
         /* 手機板響應式設計 (電腦端不用改) */
         @media (max-width: 768px) {
             body {
                 overflow: hidden;
+            }
+            .mobile-only-content {
+                display: block !important;
+            }
+            .desktop-only-content {
+                display: none !important;
             }
             .workspace {
                 flex-direction: column;
@@ -461,13 +474,25 @@
 
         <!-- 右側閱讀區 -->
         <div class="content-area">
-            <h1 class="story-title" style="color: #6b5c4d;">小說 ARCHIVES</h1>
-            <div class="story-text" style="color: #8c7e6b; text-align: center;">
-                <p style="font-size: 1.6rem; letter-spacing: 0.4rem; margin-top: 1.5rem;">小說 / FICTION</p>
-                <div style="margin-top: 2rem; display: flex; justify-content: center;">
-                    <a href="blood_hall.html" class="btn" style="min-width: 15rem; max-width: 90%; text-decoration: none;">《血色堂屋》</a>
+            <!-- 電腦端顯示區 -->
+            <div class="desktop-only-content">
+                <h1 class="story-title" style="color: #6b5c4d;">系統主機連線中...</h1>
+                <div class="story-text" style="color: #8c7e6b;">
+                    <p>等待載入文本紀錄... <span class="blinking-cursor"></span></p>
+                    <p style="margin-top: 3rem; font-family: monospace; opacity: 0.6;">[SYSTEM_MSG] 請從目錄選擇要讀取的記憶封包。</p>
                 </div>
-                <p style="margin-top: 3rem; font-family: monospace; opacity: 0.6; font-size: 0.9rem;">[SYSTEM_MSG] 請點擊上方按鈕，或從目錄選擇要讀取的記憶封包。</p>
+            </div>
+
+            <!-- 手機端顯示區 -->
+            <div class="mobile-only-content">
+                <h1 class="story-title" style="color: #6b5c4d;">小說 ARCHIVES</h1>
+                <div class="story-text" style="color: #8c7e6b; text-align: center;">
+                    <p style="font-size: 1.6rem; letter-spacing: 0.4rem; margin-top: 1.5rem;">小說 / FICTION</p>
+                    <div style="margin-top: 2rem; display: flex; justify-content: center;">
+                        <a href="blood_hall.html" class="btn" style="min-width: 15rem; max-width: 90%; text-decoration: none;">《血色堂屋》</a>
+                    </div>
+                    <p style="margin-top: 3rem; font-family: monospace; opacity: 0.6; font-size: 0.9rem;">[SYSTEM_MSG] 請點擊上方按鈕，或從目錄選擇要讀取的記憶封包。</p>
+                </div>
             </div>
         </div>
     </div>
