@@ -267,14 +267,15 @@
             left: 0;
         }
 
-        .mobile-only-content {
-            display: none;
-        }
-        .desktop-only-content {
-            display: block;
+        @media (min-width: 769px) {
+            .mobile-only-content {
+                display: none !important;
+            }
+            .desktop-only-content {
+                display: block !important;
+            }
         }
 
-        
         /* 手機板響應式設計 (電腦端不用改) */
         @media (max-width: 768px) {
             body {
