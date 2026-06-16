@@ -647,6 +647,138 @@
             background: #3a3228;
         }
 
+        /* --- Admin Modal Styles --- */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 190;
+            display: none;
+            cursor: pointer;
+        }
+
+        .admin-modal {
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            width: 90%;
+            max-width: 400px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 12, 10, 0.98);
+            border: 2px solid #ff4d4d;
+            box-shadow: 0 0 35px rgba(255, 77, 77, 0.45), inset 0 0 25px rgba(255, 77, 77, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            animation: terminalBoot 0.3s steps(4) forwards;
+            box-sizing: border-box;
+        }
+
+        .admin-modal-header {
+            border-bottom: 1px double #ff4d4d;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            letter-spacing: 0.25rem;
+            color: #ff4d4d;
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+            font-family: inherit;
+        }
+
+        .admin-modal-close {
+            background: none;
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .admin-modal-close:hover {
+            background: rgba(255, 77, 77, 0.15);
+            color: #fff;
+        }
+
+        .admin-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .admin-input-label {
+            font-size: 0.8rem;
+            color: #ff4d4d;
+            letter-spacing: 2px;
+            font-family: inherit;
+        }
+
+        .admin-input {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 77, 77, 0.4);
+            color: #ff4d4d;
+            padding: 0.8rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        .admin-input:focus {
+            outline: none;
+            border-color: #ff4d4d;
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.6);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, #7a1f1f 0%, #2c1616 100%);
+            color: #ff4d4d;
+            border: 2px outset #ff4d4d;
+            border-bottom: 2px solid #1a0505;
+            border-right: 2px solid #1a0505;
+            padding: 0.6rem 1.5rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.1s ease;
+            box-shadow: inset 1px 1px 5px rgba(255, 77, 77, 0.3), 2px 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .admin-btn:hover {
+            background: linear-gradient(135deg, #992626 0%, #3d1b1b 100%);
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 1);
+        }
+
+        .admin-btn:active {
+            border: 2px inset #1a0505;
+            border-bottom: 2px solid #ff4d4d;
+            border-right: 2px solid #ff4d4d;
+            transform: translate(1px, 1px);
+        }
+
+        .admin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         /* 手機板響應式設計 (電腦端不用改) */
         @media (max-width: 768px) {
             #welcome-sequence {
@@ -741,6 +873,11 @@
             }
             .nav-btn.prev { left: 0.5rem !important; }
             .nav-btn.next { right: 0.5rem !important; }
+            .admin-modal {
+                width: 95% !important;
+                max-width: 350px !important;
+                padding: 1.2rem !important;
+            }
         }
     </style>
 </head>
@@ -770,7 +907,10 @@
     <div class="bbs-screen" id="bbs-screen">
         <div class="bbs-header">
             <h2>CONNECTED_BBS / 留言板</h2>
-            <button class="bbs-close" onclick="toggleBBS(false)">[ DISCONNECT ]</button>
+            <div style="display: flex; gap: 0.8rem; align-items: center;">
+                <button id="admin-toggle-btn" class="bbs-close" onclick="handleAdminToggle()">[ ADMIN LOGIN ]</button>
+                <button class="bbs-close" onclick="toggleBBS(false)">[ DISCONNECT ]</button>
+            </div>
         </div>
         <div class="bbs-messages" id="bbs-messages"></div>
         <div class="bbs-footer">
@@ -809,6 +949,26 @@
         <a href="awake.html" class="btn">返回現實世界</a>
     </div>
 
+    <!-- Admin Overlay & Modal -->
+    <div class="admin-overlay" id="admin-overlay" onclick="closeAdminModal()"></div>
+    <div class="admin-modal" id="admin-modal">
+        <div class="admin-modal-header">
+            <h3>ADMIN_AUTHENTICATION</h3>
+            <button class="admin-modal-close" onclick="closeAdminModal()">[ CLOSE ]</button>
+        </div>
+        <div class="admin-input-group">
+            <label class="admin-input-label">PROTOCOL_ID (EMAIL)</label>
+            <input type="email" id="admin-email" class="admin-input" placeholder="admin@wired.net...">
+        </div>
+        <div class="admin-input-group">
+            <label class="admin-input-label">ACCESS_KEY (PASSWORD)</label>
+            <input type="password" id="admin-password" class="admin-input" placeholder="••••••••">
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.2rem;">
+            <button class="admin-btn" onclick="submitAdminLogin()">CONNECT_AUTH</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         document.addEventListener('mousemove', (e) => {
@@ -830,7 +990,49 @@
             localStorage.setItem('wired_user_id', userId);
         }
 
-        const isAdmin = () => localStorage.getItem('wired_admin') === 'true';
+        let adminUser = null;
+        const isAdmin = () => adminUser !== null;
+
+        async function checkSession() {
+            if (!_supabase) return;
+            try {
+                const { data: { session }, error } = await _supabase.auth.getSession();
+                if (error) throw error;
+                updateAdminState(session ? session.user : null);
+            } catch (err) {
+                console.error("[ AUTH: SESSION QUERY FAILURE ]", err);
+            }
+        }
+
+        function setupAuthListener() {
+            if (!_supabase) return;
+            _supabase.auth.onAuthStateChange((event, session) => {
+                updateAdminState(session ? session.user : null);
+            });
+        }
+
+        function updateAdminState(user) {
+            adminUser = user;
+            const btn = document.getElementById('admin-toggle-btn');
+            if (btn) {
+                if (adminUser) {
+                    const email = adminUser.email || '';
+                    const name = email.split('@')[0].toUpperCase();
+                    btn.innerHTML = `[ LOGOUT: ${name} ]`;
+                    btn.style.color = '#ff4d4d';
+                    btn.style.borderColor = '#ff4d4d';
+                } else {
+                    btn.innerHTML = '[ ADMIN LOGIN ]';
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }
+            }
+            // If the BBS is currently open, load messages to show/hide edit & delete buttons
+            const bbsScreen = document.getElementById('bbs-screen');
+            if (bbsScreen && bbsScreen.style.display === 'flex') {
+                loadMessages();
+            }
+        }
 
         let _supabase;
         try {
@@ -839,6 +1041,8 @@
                     headers: { 'x-sender-id': userId }
                 }
             });
+            checkSession();
+            setupAuthListener();
         } catch (e) {
             console.error("[ SYSTEM: CONNECTION PROTOCOL FAILURE ]", e);
         }
@@ -1094,9 +1298,79 @@
             }
         }
 
+        async function handleAdminToggle() {
+            if (adminUser) {
+                if (confirm('[ WARNING: TERMINATE ADMIN SESSION? ]')) {
+                    const { error } = await _supabase.auth.signOut();
+                    if (error) {
+                        alert('[ ERROR: SIGNOUT PROTOCOL FAILURE ]');
+                    }
+                }
+            } else {
+                showAdminModal();
+            }
+        }
+
+        function showAdminModal() {
+            document.getElementById('admin-overlay').style.display = 'block';
+            document.getElementById('admin-modal').style.display = 'flex';
+            document.getElementById('admin-email').focus();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-overlay').style.display = 'none';
+            document.getElementById('admin-modal').style.display = 'none';
+            document.getElementById('admin-email').value = '';
+            document.getElementById('admin-password').value = '';
+        }
+
+        async function submitAdminLogin() {
+            if (!_supabase) return;
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value;
+            if (!email || !password) {
+                alert('[ AUTH ERROR: ID AND KEY REQUIRED ]');
+                return;
+            }
+
+            const btn = document.querySelector('.admin-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'CONNECTING...';
+            btn.disabled = true;
+
+            try {
+                const { data, error } = await _supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                if (error) {
+                    alert(`[ AUTH ERROR: ${error.message.toUpperCase()} ]`);
+                } else {
+                    closeAdminModal();
+                }
+            } catch (err) {
+                alert('[ AUTH PROTOCOL FAULT ]');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#skip') {
                 applySkipLogic();
+            }
+
+            // Register Enter key listener on admin inputs
+            const emailInput = document.getElementById('admin-email');
+            const passInput = document.getElementById('admin-password');
+            if (emailInput && passInput) {
+                emailInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') submitAdminLogin();
+                });
+                passInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') submitAdminLogin();
+                });
             }
         });
 
