@@ -338,7 +338,7 @@
         // Mobile slide-out drawer menu logic
         const contentAreaForMobile = document.querySelector('.content-area');
         const sidebarForMobile = document.querySelector('.sidebar');
-        if (contentAreaForMobile && sidebarForMobile) {
+        if (contentAreaForMobile && sidebarForMobile && window.innerWidth <= 768) {
             const topBar = document.createElement('div');
             topBar.className = 'mobile-top-bar';
             
