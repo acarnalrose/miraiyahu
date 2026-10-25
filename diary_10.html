@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Miraiyahu | 站街日記</title>
+    <style>
+        :root {
+            --x: 50%;
+            --y: 50%;
+            --border-color: #6b5c4d;
+            --text-color: #d1ccb8;
+            --bg-glass: rgba(10, 8, 5, 0.9);
+            --accent: #495945;
+        }
+
+        body {
+            background-color: #1a1510;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Georgia", "Times New Roman", "Songti TC", "Songti SC", "SimSun", "Noto Serif CJK TC", "Noto Serif CJK SC", serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('wired-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 1;
+            filter: sepia(50%) contrast(120%) brightness(50%);
+            pointer-events: none;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-radial-gradient(circle at center, rgba(10, 10, 10, 0.2) 0, transparent 2px);
+            pointer-events: none;
+            filter: contrast(150%) brightness(120%) sepia(30%);
+            opacity: 0.4;
+            z-index: 2;
+        }
+
+        .scanlines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(20, 20, 20, 0.4) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.1), inset 0 0 3px rgba(100, 100, 100, 0.5);
+            border: 2px solid rgba(50, 50, 50, 0.8);
+            box-sizing: border-box;
+        }
+
+        .workspace {
+            position: relative;
+            z-index: 10;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            background: var(--bg-glass);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            animation: bootUp 1s ease-out forwards;
+        }
+
+        @keyframes bootUp {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sidebar {
+            width: 250px;
+            border-right: 2px double var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px dotted var(--border-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.2rem;
+            color: #8c7e6b;
+            text-align: center;
+        }
+
+        .directory-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .directory-item {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(107, 92, 77, 0.3);
+            text-decoration: none;
+            display: block;
+            color: var(--text-color);
+            font-size: 1rem;
+            letter-spacing: 0.1rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .directory-item:hover,
+        .directory-item.active {
+            background: rgba(44, 54, 39, 0.6);
+            color: #fff;
+            padding-left: 2rem;
+            box-shadow: inset 4px 0 0 var(--border-color);
+        }
+
+        .directory-item.active::before {
+            content: '> ';
+            font-family: 'Courier New';
+            color: var(--border-color);
+        }
+
+        .back-btn-container {
+            padding: 1.5rem;
+            border-top: 2px double var(--border-color);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            height: 3rem;
+            width: 100%;
+            background: linear-gradient(135deg, #495945 0%, #2c2416 100%);
+            color: #d1ccb8;
+            border: 2px outset #7a8c73;
+            border-bottom: 2px solid #1a150d;
+            border-right: 2px solid #1a150d;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+            text-decoration: none;
+            transition: all 0.05s ease;
+            cursor: pointer;
+        }
+
+        .btn:active {
+            border: 2px inset #1a150d;
+            border-bottom: 2px solid #7a8c73;
+            border-right: 2px solid #7a8c73;
+            transform: translate(1px, 1px);
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 4rem 6rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .content-area::-webkit-scrollbar,
+        .directory-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content-area::-webkit-scrollbar-track,
+        .directory-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 1px solid var(--border-color);
+        }
+
+        .content-area::-webkit-scrollbar-thumb,
+        .directory-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+        }
+
+        .story-title {
+            font-size: 2.5rem;
+            font-weight: 200;
+            letter-spacing: 0.3rem;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 1rem;
+            text-shadow: 0 0 8px rgba(209, 204, 184, 0.4);
+        }
+
+        .story-text {
+            font-size: 1.1rem;
+            line-height: 2.1;
+            letter-spacing: 0.08rem;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        .story-text p {
+            margin-bottom: 2rem;
+            text-indent: 0;
+        }
+
+        /* 游標微光互動 */
+        .cursor-light {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(209, 204, 184, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            mix-blend-mode: overlay;
+            z-index: 3;
+            top: 0;
+            left: 0;
+        }
+
+        
+        /* 手機板響應式設計 (電腦端不用改) */
+        @media (max-width: 768px) {
+            body {
+                overflow: hidden;
+            }
+            .workspace {
+                flex-direction: column;
+                height: 100vh;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                background: rgba(10, 8, 5, 0.98);
+                backdrop-filter: blur(20px);
+                box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8);
+                border-right: 2px solid var(--border-color);
+                border-bottom: none;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-header {
+                display: block !important;
+                padding: 1.5rem !important;
+            }
+            .sidebar-category {
+                display: block !important;
+            }
+            .directory-list {
+                display: block !important;
+                overflow-y: auto !important;
+                flex-grow: 1 !important;
+                white-space: normal !important;
+            }
+            .directory-item {
+                display: block !important;
+                padding: 1.2rem 1.5rem !important;
+                border-bottom: 1px solid rgba(107, 92, 77, 0.2) !important;
+                border-right: none !important;
+                font-size: 0.95rem !important;
+                white-space: normal !important;
+                height: auto !important;
+            }
+            .directory-item:hover,
+            .directory-item.active {
+                padding-left: 2rem !important;
+                box-shadow: inset 4px 0 0 var(--border-color) !important;
+            }
+            .directory-item.active::before {
+                content: '> ' !important;
+            }
+            .mobile-close-item {
+                color: #8c7e6b !important;
+                font-weight: bold;
+                border-bottom: 2px solid var(--border-color) !important;
+            }
+            .back-btn-container {
+                padding: 1.5rem !important;
+                border-top: 2px double var(--border-color) !important;
+                border-left: none !important;
+                width: auto !important;
+            }
+            .btn {
+                height: 3rem !important;
+                font-size: 1rem !important;
+            }
+            .mobile-top-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: rgba(10, 8, 5, 0.9);
+                border-bottom: 1px solid var(--border-color);
+                padding: 0.8rem 1.2rem;
+                position: sticky;
+                top: 0;
+                z-index: 900;
+                box-sizing: border-box;
+                width: 100%;
+            }
+            .menu-toggle-btn {
+                background: linear-gradient(135deg, #495945 0%, #2c2416 100%);
+                color: #d1ccb8;
+                border: 1px solid var(--border-color);
+                padding: 0.5rem 1rem;
+                font-family: inherit;
+                font-size: 0.9rem;
+                cursor: pointer;
+            }
+            .mobile-bar-title {
+                color: var(--text-color);
+                font-size: 1rem;
+                font-weight: bold;
+                letter-spacing: 0.1rem;
+                text-align: right;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 60%;
+            }
+            .content-area {
+                padding: 1.5rem 1.8rem 4rem 1.8rem !important;
+                flex-grow: 1;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .story-title {
+                display: none;
+            }
+            .story-text {
+                font-size: 1.02rem !important;
+                line-height: 1.85 !important;
+                letter-spacing: 0.05rem !important;
+                max-width: 100% !important;
+            }
+            /* Novel specific: keep H2 visible */
+            .story-text h2 {
+                margin-top: 4rem !important;
+                margin-bottom: 2rem !important;
+                font-size: 1.3rem !important;
+                letter-spacing: 0.1rem !important;
+                padding-bottom: 0.6rem !important;
+            }
+            .story-text h2:first-of-type {
+                margin-top: 1.5rem !important;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="cursor-light"></div>
+    <div class="noise-overlay"></div>
+    <div class="scanlines"></div>
+    <div class="frame"></div>
+
+    <div class="workspace">
+        <div class="sidebar">
+            <div class="sidebar-header">INDEX / 日記</div>
+            <div class="directory-list">
+                <a href="diary_1.html" class="directory-item" style="font-size: 1rem;">2023年01月06日</a>
+                <a href="diary_2.html" class="directory-item" style="font-size: 1rem;">2023年11月28日 —— 屍斑</a>
+                <a href="diary_3.html" class="directory-item" style="font-size: 1rem;">2023年12月16日 —— 神的名義</a>
+                <a href="diary_4.html" class="directory-item" style="font-size: 1rem;">2024年4月2日 —— 為什麼</a>
+                <a href="diary_5.html" class="directory-item" style="font-size: 1rem;">2024年4月7日 —— 招商銀行</a>
+                <a href="diary_6.html" class="directory-item" style="font-size: 1rem;">2024年4月13日 —— 粒子光暈</a>
+                <a href="diary_7.html" class="directory-item" style="font-size: 1rem;">2025年1月6日 —— 神經痛</a>
+                <a href="diary_8.html" class="directory-item" style="font-size: 1rem;">2025年7月3日 —— 天生痛苦</a>
+                <a href="diary_9.html" class="directory-item" style="font-size: 1rem;">2025年9月23日 —— 廉價商品</a>
+                <a href="diary_10.html" class="directory-item active" style="font-size: 1rem;">2026年1月11日 —— 人死債銷</a>
+            </div>
+            <div class="back-btn-container">
+                <a href="diary.html" class="btn">
+                    << BACK TO INDEX</a>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <h1 class="story-title">2026年1月11日 —— 人死債銷</h1>
+            <div class="story-text">
+                <p style="text-align: center; font-style: italic; margin-bottom: 3rem; color: #8c7e6b; text-indent: 0;">
+                    「人死債銷，是死亡在主觀層面的一些慰藉。」</p>
+
+                <p>筒子樓的水泥陽台其實還挺好的，沒有護欄。每次男人把我拽到陽台上，滿足他們野戰的癖好時，我得先把僅存的一點點尊嚴和羞恥心放下。我每每都想像自己可以自由落體，變成一攤肉泥。</p>
+                <p>但是我沒有這個勇氣。我怕摔不死，痛苦地過下半生；我怕摔死了，靈魂變成怨念在這裡遊蕩。</p>
+                <p>人死債銷，我經常在各種各樣的地方聽到這句話。尤其是我們這樣的城中村，住的多少都是作過孽的人。生前欠的多，死了就煙消雲散了。有些人會計較，有些人不會。債客觀來說是存在的，有些只是人情上不好意思再討了，有些就落到下一輩頭上，子償父債，自願的，被逼的，都有。</p>
+                <p>她從筒子樓的頂樓飛了下去。高壓電線橫七豎八，居民的晾衣繩織成了一張網，但她還是摔下去了。她離開得很漂亮，至少我是這樣覺得的，沒有我想像中的一灘爛泥。她很美麗。我給她閉上了眼睛，讓她別再看這片混沌局限的天空。生活從來沒有眷顧過我們，但神在她死亡的時候施捨了她一些愛。多可笑呢，多稀奇呢。</p>
+                <p>我不知道她欠了誰，欠了多少，也不知道那些債，會不會跟著她一起散掉。</p>
+                <p>我痛恨我的宿命論，但我還是這樣過了一天又一天。荒誕呢，荒誕吧，就這樣賴下去吧。</p>
+                <p>警察用裹屍布帶走了她的遺體，黃媽啐了一口，我知道這口唾沫是吐給錢的。人沒了，錢也跟著沒了，黃媽心疼的從來都不是人。</p>
+                <p>裹屍布是白的，抬上車的時候露出了一隻腳，腳趾甲上還塗著紅色的指甲油，是上個禮拜我借給她的那瓶，三塊五，夜市買的。我想著要不要跟警察說一聲，那瓶指甲油她還沒還我呢，後來想想算了，人死債銷嘛，我也算是她的債主之一，我不計較。多慷慨呢，我居然也有慷慨的時候。</p>
+                <p>樓下圍了一圈人，看熱鬧的比上回說要拆遷的時候還多。賣煎餅的老劉把車推了過來，生意比平時好，大家一邊看一邊吃，蔥花掉在她剛才躺過的地方。三樓的王嬸罵罵咧咧，說她摔下來的時候把自家的晾衣繩扯斷了，一條秋褲掉進了陰溝裡，問誰賠。沒有人回答她。死人是不賠的，活人也不想賠，一條秋褲就這樣變成了一筆爛賬，跟著她一起銷了。</p>
+                <p>黃媽在樓道口拿著計算器按了很久，嘀嘀嘀的，像在給她唸經。按完了她抬頭看我們，說，她欠的，你們幾個分一分。</p>
+                <p>我們幾個面面相覷，沒有人說話。</p>
+                <p>人死債銷，原來是這麼銷的，從一個人身上銷掉，再勻到好幾個人身上。像一碗粥，一個人喝不完，就倒進幾個碗裡，總歸是要有人喝下去的。我覺得這很公平，又覺得這很荒誕。公平和荒誕原來可以是同一件事，我以前怎麼就沒想到呢。</p>
+                <p>晚上她的東西被分了。小紅要了她的鏡子，阿梅要了她那件有亮片的裙子，我什麼都沒搶到，最後撿了她一雙拖鞋，左腳那隻斷了帶子。我穿著她的拖鞋站在她站過的地方，覺得自己有點像她，又覺得她現在比我自由多了。她欠的債分給了我們，她的拖鞋也分給了我，她把什麼都留下了，只把自己帶走了。</p>
+                <p>半夜我去巷口的紙紮店買了一沓冥幣，最小的面額是一億。我蹲在樓底下燒，一張一張地燒，燒了十幾個億。我想著她在下面應該是個富婆了，欠的都能還清，還能剩下不少，買一個帶護欄的陽台。火光照著那塊水泥地，地上什麼都沒有，連血都被沖乾淨了。燒到一半我忽然想，陰間會不會也有一個黃媽呢，會不會也拿著一個計算器，嘀嘀嘀地等著她。想到這裡我就笑了，笑得蹲不住，一屁股坐在地上，冥幣的灰飄到我頭髮上。</p>
+                <p>人活著欠陽間的，死了說不定還欠陰間的，債這種東西，大概比人命長。</p>
+                <p>第二天照常開工。來了個男人，進門就問，聽說昨天這樓死人了？我說嗯。他說，那陽台還能去嗎，晦氣不晦氣。我說不晦氣，她走得很漂亮。他想了想，說那便宜點。我看了看黃媽，黃媽點了頭。</p>
+                <p>原來死亡還能打折。荒誕呢，荒誕吧。</p>
+                <p>我被他拽到陽台上，水泥還是那塊水泥，天還是那片天，晾衣繩已經被王嬸重新拉好了，掛著一條新秋褲，在風裡晃。我閉上眼睛，想像我自由落體，想像我變成一攤肉泥，又想像我不是一攤肉泥，是像她那樣漂亮的。想完了我睜開眼睛，男人還沒完事。</p>
+                <p>我腳上還穿著她的拖鞋，左腳那隻帶子斷了，一直往下滑。我用腳趾頭勾著它，勾得很用力，怕它掉下去。</p>
+                <p>它掉下去的話，我還得下樓去撿。</p>
+                <p>男人走了以後，我一個人坐在陽台上，把那隻拖鞋脫下來，拿在手裡看了很久。</p>
+                <p>人死債銷，是死亡在主觀層面的一些慰藉。我以前一直以為這句話說的是死人，現在才知道，說的是活人。死人哪裡還有什麼主觀呢，她閉上眼睛以後，就不再覺得欠，也不再覺得不欠了，這份慰藉她一點都用不上。用得上的是我們，是黃媽，是王嬸，是蹲在樓底下燒冥幣的我。我們說人死債銷，是為了讓自己相信她走得乾乾淨淨，好讓我們接過她的賬的時候，手不抖。</p>
+                <p>客觀上債一分都沒少，主觀上她已經還清了。這兩件事同時成立，就像她摔得那麼漂亮，和她摔死了，也同時成立一樣。</p>
+                <p>那活著呢，活著有沒有一點主觀層面的慰藉呢。</p>
+                <p>我想了很久，想出來的都很可笑。一瓶不用還的指甲油，一碗被倒進好幾個碗裡的粥，十幾個億的冥幣，一條重新掛上去的秋褲。還有這隻拖鞋，帶子斷了，可我還得穿著它，它一掉，我就得下樓去撿，撿回來，再穿上，再用腳趾頭勾著。我想這大概就是活人的慰藉了，不是債銷了，是債還在，人也還在，還能被一隻拖鞋使喚來使喚去。</p>
+                <p>多可笑呢，多稀奇呢，神施捨給死人的是愛，施捨給活人的是一隻斷了帶子的拖鞋。</p>
+                <p>我從王嬸的晾衣繩上剪了一小截，把拖鞋的帶子綁上了。那張沒接住她的網，總算接住了一點東西。</p>
+                <p>這下我又欠了王嬸一截晾衣繩。</p>
+                <p>人死債銷。活人的債是銷不掉的，活人只能一筆一筆地欠著，越欠越多。那就賴著吧，賴賬也是賴，賴活著也是賴。</p>
+
+                <br><br><br>
+                <p style="text-align: center; font-family: monospace; opacity: 0.5; text-indent: 0;">- END_OF_RECORD -
+                </p>
+</div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const body = document.body;
+            const x = (e.clientX / window.innerWidth * 100) + '%';
+            const y = (e.clientY / window.innerHeight * 100) + '%';
+            document.documentElement.style.setProperty('--x', x);
+            document.documentElement.style.setProperty('--y', y);
+        });
+
+        // Mobile slide-out drawer menu logic
+        const contentAreaForMobile = document.querySelector('.content-area');
+        const sidebarForMobile = document.querySelector('.sidebar');
+        if (contentAreaForMobile && sidebarForMobile && window.innerWidth <= 768) {
+            const topBar = document.createElement('div');
+            topBar.className = 'mobile-top-bar';
+            
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'menu-toggle-btn';
+            toggleBtn.innerText = '☰ 目錄';
+            
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'mobile-bar-title';
+            const h1 = contentAreaForMobile.querySelector('.story-title') || document.querySelector('h1');
+            titleSpan.innerText = h1 ? h1.innerText : 'Miraiyahu';
+            
+            topBar.appendChild(toggleBtn);
+            topBar.appendChild(titleSpan);
+            
+            contentAreaForMobile.insertBefore(topBar, contentAreaForMobile.firstChild);
+            
+            // Toggle sidebar
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebarForMobile.classList.toggle('open');
+            });
+            
+            // Close when clicking content
+            contentAreaForMobile.addEventListener('click', (e) => {
+                if (!sidebarForMobile.contains(e.target) && !toggleBtn.contains(e.target)) {
+                    sidebarForMobile.classList.remove('open');
+                }
+            });
+            
+            // Inject Close button inside sidebar
+            const dirList = sidebarForMobile.querySelector('.directory-list');
+            if (dirList && !sidebarForMobile.querySelector('.mobile-close-item')) {
+                const closeItem = document.createElement('a');
+                closeItem.className = 'directory-item mobile-close-item';
+                closeItem.innerHTML = '✕ 關閉目錄';
+                closeItem.href = 'javascript:void(0)';
+                closeItem.addEventListener('click', () => {
+                    sidebarForMobile.classList.remove('open');
+                });
+                dirList.insertBefore(closeItem, dirList.firstChild);
+            }
+            
+            // Close menu when a link is clicked
+            sidebarForMobile.querySelectorAll('.directory-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    sidebarForMobile.classList.remove('open');
+                });
+            });
+        }
+
+    </script>
+</body>
+
+</html>
